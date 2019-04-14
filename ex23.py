@@ -1,3 +1,5 @@
+# * 바이트 ->decode()-> 문자열
+# * 문자열 ->encode()-> 바이트
 import sys
 스크립트, 입력_인코딩, error = sys.argv
 
@@ -13,7 +15,7 @@ def main(언어_파일, 인코딩, errors):
 
 #함수 이름은 줄_출력이고 3개의 인자값을 받는다.
 def 줄_출력(줄, 인코딩, errors):
-    다음_언어 = 줄.strip() #줄에서 양쪽 공백을 지운다.
+    다음_언어 = 줄.strip() #인코딩 에러가 있는 경우 ValueError 예외를 발생시킨다.
     생_바이트열 = 다음_언어.encode(인코딩, errors=errors)
     요리한_문자열 = 생_바이트열.decode(인코딩, errors=errors)
 
