@@ -1,21 +1,19 @@
-
+#[1]사용자의 입력을 받아서 출력하는 코드
 print("How old are you?", end=' ')
 age = input()
 print("How tall are you?", end=' ')
 height = input()
 print("How much do you weigh?", end=' ')
 weight = input()
-
 print(f"So, you're {age} old, {height} tall and {weight} heavy.")
-
+#===============================================================================
 from sys import argv
-script, filename = argv
+script, filename = argv  #파일 이름을 인자값으로 받는다.
 
-
-txt = open(filename)
+txt = open(filename) #파일을 읽기모드로 열고 txt 변수에 담는다.
 
 print("Here's your file {filename}:")
-print(txt.read())
+print(txt.read()) #텍스트 변수를 read하여 출력한다.
 
 print("Type the filename again:")
 file_again = input("> ")
@@ -23,7 +21,7 @@ file_again = input("> ")
 txt_again = open(file_again)
 
 print(txt_again.read())
-
+#===============================================================================
 
 print('Let\'s practice everything.')
 print('You\'d need to know \'bout escapes\
