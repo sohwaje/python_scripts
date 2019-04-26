@@ -15,11 +15,12 @@ def p(pattern):
 
 
 # URL 입력을 받음
-URL = 'http://www.daum.net'
+URL = 'http://www.naver.com'
 html = get(URL)
 
-# 변수 = 정규식 표현으로 패턴을 만듦
-pattern = 'http.*://[^"\']+'
+# 변수 = 정규식 표현으로 패턴을 만듦(이 코드가 핵심!!)
+pattern = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+
 text = p(pattern)
 
 # html에서 패턴과 일치하는 항목을 찾아 result에 저장.
@@ -29,6 +30,6 @@ result = text.findall(html)
 sort = sorted(result, key=len)
 
 #url에 붙어 있는 "를 제거
-for k in sort:
-    print(k)
+for url in sort:
+    print(url)
     #print(k.replace("'","")) #정규식 표현에서 "와'를 제거하였으므로 필요 없음.
