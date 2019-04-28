@@ -1,6 +1,6 @@
 import requests
 import re
-
+import argv
 #url의 응답코드가 200ok이면, url을 html이라는 변수에 text로 저장하는 함수
 def get(url):
     resp = requests.get(url)
@@ -12,8 +12,7 @@ def get(url):
 def p(pattern):
     result = re.compile(pattern)
     return result
-
-
+    
 #URL 입력을 받음
 URL = input("input URL> ")
 html = get(URL)

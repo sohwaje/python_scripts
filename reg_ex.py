@@ -29,14 +29,12 @@ print(p4.findall(text))
 print(p5.findall(text))
 print(p6.findall(text))
 print(p7.findall(text))
-#['a', 'b']
 #['1', '2', '3', 'a', 'f', 'f', '4', '5', '6', 'b', '6', 'c', '7', 'd', 'D', 'e', 'f', 'g', 'h']
 #['1', '2', '3', 'a', 'f', 'f', '4', '5', '6', 'b', '6', 'c', '7', 'd', 'D', 'e', 'f', 'g', 'h']
 #['af', 'dD', 'ef', 'gh']
 #['a', 'f', 'f', 'b', 'c', 'd', 'D', 'e', 'f', 'g', 'h']
 #['1', '2', '3', '4', '5', '6', '6', '7']
 #['1', '4']
-
 text = "aab a0b abc"
 p = reg('a.b')
 print(p.findall(text))
@@ -53,3 +51,19 @@ print(p2.findall(text))
 #['calendar']
 #['c', 'a', 'e', 'd', 'a']
 #['l', 'n', 'r']
+
+
+print("개행문자를 제외한 따옴표 사이의 모든 단일문자와 일치되는 정규식")
+text = "http://search.naver.com/search.naver?where=nexearch&query=%EB%82%98%EC%9D%B4%ED%82%A4+%EC%97%90%EC%96%B4%EB%A7%A5%EC%8A%A4+95&sm=top_lve&ie=utf8"
+lines = re.split("\r?\n", text);
+p = re.compile('.')
+for line in lines[:]:
+    if p.search(line):
+        print("line", line)
+    else:
+        print(none)
+
+print("개행문자를 포함한 모든 문자와 완전히 일치되는 정규식")
+p = re.compile('[/s/S]')
+m = p.findall(text)
+print(m)

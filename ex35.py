@@ -5,16 +5,16 @@ def gold_room():
     print("황금으로 가득 찬 방입니다. 얼마나 가져갈까요?")
 
     choice = input("> ")
-    if "0" in choice or "1" in choice:
-        number = int(choice)
+    if "0" in choice or "1" in choice:      # 입력 값이 x0, x0, 1x, x1이면 True
+        number = int(choice)                # int()의 동작 방식은?
     else:
-        death("인간이여, 숫자 쓰는 법부터 배우세요.")
+        death(" 죽었습니다. 인간이여, 숫자 쓰는 법부터 배우세요.")
 
     if number < 50:
         print("좋아, 당신이 이겼습니다.")
         exit(0)
     else:
-        death("욕심쟁이!")
+        death("욕심쟁이!!")
 #[2]함수 bear_room()
 def bear_room():
     print("여기에는 곰이 한 마리 있습니다.")
@@ -26,14 +26,14 @@ def bear_room():
     while True:
         choice = input("> ")
         if choice == "steal":
-            death("곰이 당신을 쳐다보더니 목이 떨어져라 따귀를 날립니다.")
+            death("죽었습니다. 곰이 당신을 쳐다보더니 목이 떨어져라 따귀를 날립니다.")
         elif choice == "laugh" and not bear_move:
             print("곰이 문에서 비켜섰습니다.")
             print("이제 나갈 수 있습니다.")
             bear_move = True
 
         elif choice == "laugh" and bear_move:
-            death("곰이 머리 끝까지 열받아 당신의 다리를 씹어먹습니다.")
+            death("죽었습니다. 곰이 머리 끝까지 열받아 당신의 다리를 씹어먹습니다.")
         elif choice == "open" and bear_move:
             gold_room()                     # ==> [3]함수 gold_room()호출
         else:
@@ -49,12 +49,12 @@ def kant_room():
     if "run" in choice:
         start()
     elif "eat" in choice:
-        death("맛이 좋군요.")
+        death("죽었습니다. 맛은 좋네요.")
     else:
         kant_room()
 
 def death(reason):
-    print(reason, "잘 했어요!")
+    print(reason, "죽었어요.잘 했어요!")
     exit(0)
 
 #[1] 함수 start()
