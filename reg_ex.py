@@ -59,7 +59,7 @@ lines = re.split("\r?\n", text);
 p = re.compile('.')
 for line in lines[:]:
     if p.search(line):
-        print("line", line)
+        print("line: ", line)
     else:
         print(none)
 
