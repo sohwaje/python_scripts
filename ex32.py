@@ -16,14 +16,15 @@
 원소들 = []
 
 # for 함수와 range함수의 조합
-#for i in range(0, 6): # 0, 6 = 5개의 연속된 숫자를 의미한다.
-#    print(f"list에 {i} 숫자를 더합니다.")
+for i in range(0, 6): # 0, 6 = 5개의 연속된 숫자를 의미한다.
+    print(f"list에 {i} 숫자를 더합니다.")
     # append는 list가 인식하는 함수이다.
-#    원소들.append(i)
+    원소들.append(i)
+print(원소들)
 
 print("range 함수로만 위 로직을 구현하기")
-i = list(range(0, 6))
-print(i)
+print(list(range(0, 6)))
+
 
 #for i in 원소들:
 #    print(f"원소는 {i}")

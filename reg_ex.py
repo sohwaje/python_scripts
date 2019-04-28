@@ -13,6 +13,7 @@ print(p.findall(text))
 # "before"는 정규식과 일치하는 문자인 "b"가 있으므로 매치
 # "dude"는 정규식과 일치하는 문자인 a, b, c 중 어느 하나도 포함하고 있지 않으므로 매치되지 않음
 
+#문자 클래스[] : 문자 클래스는 안에 나열된 문자들 중 한 문자와 일치된다. 문자클래스가 반복되어 있을 때 각 클래스는 서로 독립적이다.
 text = "123aff456b6c7dDefgh"
 p = reg('[0-9]|[a-z]|[A-Z]')
 p1 = reg('[0-9a-zA-Z]')
@@ -49,3 +50,6 @@ p2 = reg('[^a-fA-F0-9]')
 print(p.findall(text))
 print(p1.findall(text))
 print(p2.findall(text))
+#['calendar']
+#['c', 'a', 'e', 'd', 'a']
+#['l', 'n', 'r']
