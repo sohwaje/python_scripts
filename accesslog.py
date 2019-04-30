@@ -12,6 +12,6 @@ lines = file.readlines()
 #file.close()
 
 #[2] access_log에서 GET 또는 Post 경로 추출
-m = re.compile('[GE|POS]*T.*(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+m = re.compile('[GE|POS]+T.*?[HTTP]')
 for line in lines:
     print(m.findall(line))
