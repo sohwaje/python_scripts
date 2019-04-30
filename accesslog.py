@@ -12,6 +12,13 @@ lines = file.readlines()
 #file.close()
 
 #[2] access_log에서 GET 또는 Post 경로 추출
-m = re.compile('[GE|POS]+T.*?[HTTP]')
+m = re.compile('([GET|POST].+)(?:HTTP)')
 for line in lines:
-    print(m.findall(line))
+    path = m.findall(line)
+    for result in path:
+        print(result)
+"""
+정규식 엔진은 []안의 문자열 "GET"과 "POST"의 일치를 시도한다.
+그 뒤의 문자(".")가 하나 이상 일치하므로 +는 최대 일치를 시도한다.
+정규식 엔진이 최대 일치를 끝낸 시점에서 (?:HTTP) 즉, HTTP가 들어간 그룹은 출력에서 제외한다.
+"""
