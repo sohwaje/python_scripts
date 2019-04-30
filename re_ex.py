@@ -1,12 +1,13 @@
 import re
 
 text = """
-tomato','potato','aaabc','iiibc','aiabc','aaibc','iiabc
+tomato potato aaabc iiibc aiabc aaibc iiabc
 """
 p = re.compile('[tom|pot]*ato')
-m = p.findall(text)
-for i in m:
-    print(i)
+m = p.match(text)
+print(m)
+#for i in m:
+#    print(i)
 
 p = re.compile('[a-z]*bc', re.VERBOSE)
 m = p.findall(text)

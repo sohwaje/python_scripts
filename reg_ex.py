@@ -55,7 +55,7 @@ print(p2.findall(text))
 
 print("개행문자를 제외한 따옴표 사이의 모든 단일문자와 일치되는 정규식")
 text = "http://search.naver.com/search.naver?where=nexearch&query=%EB%82%98%EC%9D%B4%ED%82%A4+%EC%97%90%EC%96%B4%EB%A7%A5%EC%8A%A4+95&sm=top_lve&ie=utf8"
-lines = re.split("\r?\n", text); 
+lines = re.split("\r?\n", text);
 p = re.compile('.')
 for line in lines[:]:
     if p.search(line):
