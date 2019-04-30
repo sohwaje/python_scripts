@@ -1,3 +1,5 @@
+# 아파치 Access_log에서 IP를 추출한다.
+# 아파치 Access_log에서 GET과 POST 방식으로 요청된 경로를 추출한다.
 from sys import argv
 import re
 script, file_name = argv
