@@ -80,3 +80,7 @@ print(p.findall(text))
 그러다 정규식 엔진이 "?"를 만나면 최대 일치를 취소하고 최소 일치를 시도한다.
 "t"까지 일치하면 엔진이 종료된다.
 """
+
+text="<p>The very <em>first</em> task is to find the beginning of a paragraph.</p> <p>Then you have to find the end of the paragraph </p>="
+p = re.compile('<p>.*?</p>')
+print(p.findall(text))
