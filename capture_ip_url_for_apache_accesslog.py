@@ -18,7 +18,7 @@ file = open(file_name, 'r')
 lines = file.readlines()
 
 #access_log에서 IP와 URL 경로 추출
-m = re.compile('([\d]+[.]+\d+[.]+\d+[.]+[\d]).+(?:"GET|"POST)(.*?)(?:HTTP)', re.IGNORECASE)
+m = re.compile('([\d]+[.]+\d+[.]+\d+[.]+[\d]).+(?:"GET|"POST)(.*?)(?:HTTP)')
 for line in lines:
     ip_path = m.findall(line)
     for result in ip_path:
@@ -32,6 +32,6 @@ file.close()
 #    for result in m:
 #        print(result)
 
-
+# r'\bJane\b|\bJanet\b'
 #[2] access_log에서 GET 또는 Post 요청 경로만 추출(출력 결과 맨 앞에 GET 또는 POST가 붙는다.)
 #m = re.compile('([GET|POST].+)(?:HTTP)')
