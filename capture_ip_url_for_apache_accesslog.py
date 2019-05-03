@@ -18,7 +18,7 @@ file = open(file_name, 'r')
 lines = file.readlines()
 
 #access_log에서 IP와 URL 경로 추출
-m = re.compile('([\d]+[.]+\d+[.]+\d+[.]+[\d]).+(?:"GET|"POST)(.*?)(?:HTTP)')
+m = re.compile('([\d]+[.]+\d+[.]+\d+[.]+[\d]).+(?:\"GET|\"POST)(.*?)(?:HTTP)')
 for line in lines:
     ip_path = m.findall(line)
     for result in ip_path:
