@@ -15,8 +15,7 @@ while len(thing) !=10:                          # thing의 개수가 10개가 �
 
 print(thing)                                    # thing 리스트 전체를 출력한다.
 print(thing[1])                                 # thing 리스트의 1번째 요소를 출력한다.
-print(thing[-1])                                # thing 리스트의 마지막 요소를 출력한다.
-print(thing.pop())
-
-print(' '.join(thing))
-print('#'.join(thing[3:5]))
+print(thing[-1])                                # thing 리스트의 맨 마지막 요소를 출력한다.
+print(thing.pop())                              # pop()은 thing 리스트의 맨 마지막 요소를 뺀 나머지를 출력한다.
+print('|'.join(thing))                          # thing 리스트의 각각의 문자열 사이에 공백(|)을 삽입한다.
+print('#'.join(thing[3:5]))                     # thing 리스트에서 3번째에서 4번째 요소 사이에 #를 삽입한다.
