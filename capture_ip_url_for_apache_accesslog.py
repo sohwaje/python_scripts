@@ -1,4 +1,4 @@
-# Catch a IP, PATH and URL in Apache Access_log
+# Grap a IP, PATH and URL in Apache Access_log
 """usage
 ]> python3.7 script_name apache_access.log
 regular expressions : https://regex101.com/r/lIHC9G/1
