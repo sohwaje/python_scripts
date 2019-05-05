@@ -18,7 +18,6 @@ URL = input('URL> ')
 html = get(URL)
 
 p = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
-
 text = pattern(p)
 # html에서 패턴과 일치하는 항목을 찾아 list 형식으로 result에 저장.
 result = text.findall(html)
