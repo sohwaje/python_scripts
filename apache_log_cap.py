@@ -2,6 +2,9 @@
 """usage
 ]> python3.7 script_name apache_access.log
 """
+"""
+start of script
+"""
 from sys import argv
 import re
 script, file_name = argv
