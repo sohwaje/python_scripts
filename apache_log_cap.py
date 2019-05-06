@@ -17,7 +17,7 @@ num = 0
 for line in lines:
     ip_path = m.findall(line)
     num = num + 1
-#    print(f"{num}",' | '.join(ip_path))
+#    print(f"{num}",' | '.join(ip_path))        #리스트의 공백에 |를 삽입한다.
     print(f"{num}", "IP:",ip_path[0], "PATH:",ip_path[1].lstrip(), "URL:",ip_path[-1])
 file.close()
 """
