@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.7
+
 # Grap a IP, PATH and URL in Apache Access_log
 """usage
 ]> python3.7 script_name apache_access.log
