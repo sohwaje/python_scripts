@@ -8,23 +8,27 @@ def get(url):
     return html
 
 # pattern def
-def pattern(p):
-    result = re.compile(p)
+def pattern(x):
+    result = re.compile(x)
     return result
 
+
 # input a URL
-#URL = 'http://www.naver.com'
 URL = input('URL> ')
 html = get(URL)
 
+# full url
 p = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 text = pattern(p)
-# html에서 패턴과 일치하는 항목을 찾아 list 형식으로 result에 저장.
-result = text.findall(html)
-
-# sorted key len
-sort = sorted(result, key=len)
-
-#print url in list
-for url in sort:
+result = text.findall(html)         # html에서 fullurl을 추출하여 result에 담는다.
+sort = sorted(result, key=len)      # sorted key len
+for url in sort:                    # print url in list
     print(url)
+
+# only www
+p_1 = '(:?http[s]?://[a-z0-9._]+)'
+text = pattern(p_1)
+result = text.findall(html)
+sort = sorted(result, key=len)
+for www in sort:
+    print(www)
