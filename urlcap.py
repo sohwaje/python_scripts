@@ -2,13 +2,14 @@
 import requests
 import re
 
+# 사이트 유효성 검사 및 사이트 내용 저장 함수
 def get(url):
     resp = requests.get(url)
     if resp.status_code == requests.codes.ok:       # if 200 ok -> catch a url and save function
         html = resp.text
     return html
 
-# pattern def function
+# pattern 컴파일 함수
 def pattern(x):
     result = re.compile(x)
     return result
