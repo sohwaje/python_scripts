@@ -53,7 +53,7 @@ def short_url():
     for url in sort:
         print(url)
 
-# url 응답 시간 측정
+# url 응답 시간 측정(예외 처리 부분 추가)
 def respones_time():
     sort = get_parsed_url_list()
     for respon in sort:
