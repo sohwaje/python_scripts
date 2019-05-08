@@ -1,5 +1,6 @@
 #!/usr/bin/env python3.7
 import requests
+from requests.exceptions import Timeout
 import re
 import datetime
 import time
@@ -56,8 +57,13 @@ def short_url():
 def respones_time():
     sort = get_parsed_url_list()
     for respon in sort:
-        rp = requests.get(respon)
-        print(rp.elapsed, respon)
+        try:
+            rp = requests.get(respon)
+            print(rp.elapsed, respon)
+        except:
+            print("Unexpected error")           # 에러를 만나면 출력
+            pass                                # 에러를 무시하고 계속 진행
+
 
 # exit function
 def End_of_script(x):
