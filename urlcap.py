@@ -34,8 +34,8 @@ def get_parsed_url_list():
 def get_parsed_short_url_list():
     URL = input('URL> ')
     html = get(URL)
-    p_1 = '(:?http[s]?://[a-z0-9._\-]+)'
-    text = pattern(p_1)
+    p = '(:?http[s]?://[a-z0-9._\-]+)'
+    text = pattern(p)
     result = text.findall(html)
     sort = sorted(result, key=len)
     return sort
