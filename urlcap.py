@@ -15,41 +15,47 @@ def get(url):
         exit(0)
     return html
 
-# pattern 정규식 컴파일 함수
+# 정규식 패턴 컴파일 함수
 def pattern(x):
     result = re.compile(x)
     return result
 
-# full url function (URL 전체를 출력)
-def full_url():
+# 전체 url 파싱 함수
+def get_parsed_url_list():
     URL = input('URL> ')
     html = get(URL)
-    p = 'http[s]?://(?:[a-zA-Z]|[0-9][-]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'    # FULL URL 캡쳐 정규식
+    p = 'http[s]?://(?:[a-zA-Z]|[0-9][-]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     text = pattern(p)
     result = text.findall(html)
     sort = sorted(result, key=len)
-    for url in sort:
-        print(url)
+    return sort
 
-# only www function (WWW URL 출력)
-def only_www():
+# 짧은 url 파싱 함수
+def get_parsed_short_url_list():
     URL = input('URL> ')
     html = get(URL)
-    p_1 = '(:?http[s]?://[a-z0-9._\-]+)'                                                        # WWW URL 캡쳐 정규식
+    p_1 = '(:?http[s]?://[a-z0-9._\-]+)'
     text = pattern(p_1)
     result = text.findall(html)
     sort = sorted(result, key=len)
-    for www in sort:
-        print(www)
+    return sort
 
+# 전체 URL을 출력
+def full_url():
+    sort = get_parsed_url_list()
+    for url in sort:
+        print(url)
+
+# 짧은 URL을 출력
+def short_url():
+    sort = get_parsed_short_url_list()
+    for url in sort:
+        print(url)
+
+# url 응답 시간 측정
 def respones_time():
-    URL = input('URL> ')
-    html = get(URL)
-    p = 'http[s]?://(?:[a-zA-Z]|[0-9][-]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'    # FULL URL 캡쳐 정규식
-    text = pattern(p)
-    result = text.findall(html)
-    sort = sorted(result, key=len)
-    for respon in result:
+    sort = get_parsed_url_list()
+    for respon in sort:
         rp = requests.get(respon)
         print(rp.elapsed, respon)
 
@@ -69,7 +75,7 @@ def start():
     if choice == "1":
         full_url()
     elif choice == "2":
-        only_www()
+        short_url()
     elif choice =="3":
         respones_time()
     else:
