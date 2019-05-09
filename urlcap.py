@@ -53,17 +53,20 @@ def short_url():
     for url in sort:
         print(url)
 
-# url 응답 시간 측정(예외 처리 부분 추가)
-def respones_time():
+# url 응답 시간 측정을 반복문 수행 및 예외 처리 함수 호출
+def response_time():
     sort = get_parsed_url_list()
     for respon in sort:
-        try:
-            rp = requests.get(respon)
-            print(rp.elapsed, respon)
-        except:
-            print("Unexpected error")           # 에러를 만나면 출력
-            pass                                # 에러를 무시하고 계속 진행
+        try_response(respon)
 
+# 예외 처리 수행 및 url 응답 시간 측정
+def try_response(respon):
+    try:
+        rp = requests.get(respon)
+        print(rp.elapsed, respon)
+    except:
+        print("Unexpected error")
+        pass
 
 # exit function
 def End_of_script(x):
@@ -83,7 +86,7 @@ def start():
     elif choice == "2":
         short_url()
     elif choice =="3":
-        respones_time()
+        response_time()
     else:
         End_of_script("Thank you")
 
