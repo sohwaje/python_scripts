@@ -6,74 +6,108 @@ import datetime
 import time
 import ssl
 
-# 사이트 유효성 검사 및 사이트 내용 저장
+"""
+url requests 코드 200ok -> url을 텍스트 형식으로 html 변수에 저장.
+url requests not 200ok -> 현재 url 상태 코드를 출력하고 스크립트 종료.
+"""
 def get(url):
     resp = requests.get(url)
-    if resp.status_code == requests.codes.ok:       # if 200 ok -> catch a url and save function
+    if resp.status_code == requests.codes.ok:
         html = resp.text
     else:
         print('%s is Check : Response Status :%d' %(url, resp.status_code))
         exit(0)
     return html
 
-# 정규식 패턴 컴파일 함수
+"""
+추출 할 문자열의 정규식 패턴을 컴파일
+"""
 def pattern(x):
-    result = re.compile(x)
-    return result
+    return re.compile(x)
 
-# 전체 url 파싱 함수
-def get_parsed_url_list():
+"""
+사용자가 입력한 URL에서 정규식 패턴에 일치하는 문자열(full url)을 찾아서 result 변수에 담는다.
+"""
+def get_parsed_full_url_list():
     URL = input('URL> ')
     html = get(URL)
     p = 'http[s]?://(?:[a-zA-Z]|[0-9][-]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     text = pattern(p)
     result = text.findall(html)
-    sort = sorted(result, key=len)
-    return sort
+    return result
 
-# 짧은 url 파싱 함수
+"""
+사용자가 입력한 URL에서 정규식 패턴에 일치하는 문자열(short url)을 찾아서 result 변수에 담는다.
+"""
 def get_parsed_short_url_list():
     URL = input('URL> ')
     html = get(URL)
     p = '(:?http[s]?://[a-z0-9._\-]+)'
     text = pattern(p)
     result = text.findall(html)
+    return result
+
+"""
+full url 목록에서 가장 짧은 url에서 가장 긴 url 순서로 정렬한 결과를 반환한다.
+"""
+def sort_full_url_list():
+    result = get_parsed_full_url_list()
     sort = sorted(result, key=len)
     return sort
 
-# 전체 URL을 출력
+"""
+short url 목록에서 가장 짧은 url에서 가장 긴 url 순서로 정렬한 결과를 반환한다.
+"""
+def sort_short_url_list():
+    result = get_parsed_short_url_list()
+    sort = sorted(result, key=len)
+    return sort
+
+"""
+정렬한 full url 목록을 출력한다.
+"""
 def full_url():
-    sort = get_parsed_url_list()
+    sort = sort_full_url_list()
     for url in sort:
         print(url)
 
-# 짧은 URL을 출력
+"""
+정렬한 short url 목록을 출력한다.
+"""
 def short_url():
-    sort = get_parsed_short_url_list()
+    sort = sort_short_url_list()
     for url in sort:
         print(url)
 
-# url 응답 시간 측정을 반복문 수행 및 예외 처리 함수 호출
+"""
+full url 목록에서 각 url의 응답 시간(response time)을 측정한다.
+"""
 def response_time():
-    sort = get_parsed_url_list()
-    for respon in sort:
-        try_response(respon)
+    sort = sort_full_url_list()
+    for url in sort:
+        try_response(url)
 
-# 예외 처리 수행 및 url 응답 시간 측정
-def try_response(respon):
+"""
+url의 응답 시간을 측정하면서 예외가 발생하면 "Unexpected error"를 출력하고 계속 진행한다.
+"""
+def try_response(url):
     try:
-        rp = requests.get(respon)
-        print(rp.elapsed, respon)
+        rp = requests.get(url)
+        print(rp.elapsed, url)
     except:
         print("Unexpected error")
         pass
 
-# exit function
+"""
+스크립트 종료 함수
+"""
 def End_of_script(x):
     print(x, "Good Bye")
     exit(0)
 
-# start function
+"""
+스크립트 시작 함수 : 다자택일
+"""
 def start():
     print("Capture full url     : 1,  ex)http://www.abc.com/abc/&879/778_ga.gif")
     print("Capture short url    : 2,  ex)http://www.abc.com")
@@ -90,5 +124,7 @@ def start():
     else:
         End_of_script("Thank you")
 
-# start of script
+"""
+스크립트 실행
+"""
 start()
