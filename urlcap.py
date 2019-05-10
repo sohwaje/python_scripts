@@ -10,7 +10,7 @@ import ssl
 url requests 코드 200ok -> url을 텍스트 형식으로 html 변수에 저장.
 url requests not 200ok -> 현재 url 상태 코드를 출력하고 스크립트 종료.
 """
-def get(url):
+def get_html_from_remote_url(url):
     resp = requests.get(url)
     if resp.status_code == requests.codes.ok:
         html = resp.text
@@ -30,7 +30,7 @@ def pattern(x):
 """
 def get_parsed_full_url_list():
     URL = input('URL> ')
-    html = get(URL)
+    html = get_html_from_remote_url(URL)
     p = 'http[s]?://(?:[a-zA-Z]|[0-9][-]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     text = pattern(p)
     result = text.findall(html)
@@ -41,7 +41,7 @@ def get_parsed_full_url_list():
 """
 def get_parsed_short_url_list():
     URL = input('URL> ')
-    html = get(URL)
+    html = get_html_from_remote_url(URL)
     p = '(:?http[s]?://[a-z0-9._\-]+)'
     text = pattern(p)
     result = text.findall(html)
