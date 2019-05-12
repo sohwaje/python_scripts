@@ -109,12 +109,11 @@ def convert(code_pice, sentence):
 #================================ 함수 정의 끝 ====================================
 # CTRL -D를 누를 때까지 계속한다.
 """
-[1] code_pices = list(sentences.keys()): 문장들(sentences) 사전에서 key에 해당하는 것을 코드_조각(code_pices) 리스트에 담는다.
+[1] code_pices = list(sentences.keys()): 문장들(sentences)에서 key에 해당하는 코드_조각(code_pices)을 리스트에 담는다.
 # 6개의 code_pice가 리스트에 담긴다.
 [2] random.shuffle(code_pices) : 코드_조각들[code_pices] 리스트 안의 요소들을 랜덤하게 섞는다.
 [3] for code_pice in code_pices: 코드_조각들 리스트에서 코드_조각을 꺼낸다.
-[4] sentence = sentences[code_pice] : 문장들(sentences) 사전에서 [code_pice]를 찾아 sentence에 담는다.
-# 이 코드는 senteces{사전}에서 code_pice key에 해당하는 값을 찾아 sentece에 담는 코드이다.
+[4] sentence = sentences[code_pice] : 문장들(sentences) 사전에서 [code_pice]를 꺼내서 sentence에 담는다.
 # 출력 : sentence: *** 변수를 %%% 클래스의 인스턴스 하나로 정한다. / code_pice: *** = %%%()
 """
 try:
