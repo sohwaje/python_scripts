@@ -17,11 +17,11 @@ import sys
 word_URL = 'http://learncodethehardway.org/words.txt'
 words = []
 sentences = {
-        "class %%%(%%%):":                                       # code_pices[0]
+        "class %%%(%%%):":                                       # code_pices[0], code_pice.count(%%%) = 2
             "%%% (이)라는 이름의 클래스를 만드는데 %%%의 일종이다.(is-a)",
-        "class %%%(object):\n\tdef __init__(self, ***)":         # code_pices[1]
+        "class %%%(object):\n\tdef __init__(self, ***)":         # code_pices[1], code_pice.count(%%%) = 1, code_pice.count(***) = 1
             "클래스 %%%은/는 self와 *** 매개변수를 받는 __init__ 을 가졌다.(has-a)",
-        "class %%%(object):\n\tdef ***(self, @@@)":              # code_pices[2]
+        "class %%%(object):\n\tdef ***(self, @@@)":              # code_pices[2], code_pice.count(%%%) = 1, code_pice.count(***) = 1
             "클래스 %%%은/는 self와 @@@ 매개변수를 받는 이름이 ***인 함수를 가졌다.(has-a)",
         "*** = %%%()":                                           # code_pices[3]
             "*** 변수를 %%% 클래스의 인스턴스 하나로 정한다.",
@@ -58,18 +58,18 @@ for word in urlopen(word_URL).readlines():
     words.append(str(word.strip(), encoding='utf-8'))
 #    print("word 출력:", word)                         # 출력 예: b'design\n'
 #    print("word.strip() 출력", word.strip())          # 출력 예: b'design' -> strip()은 \n를 벗겨낸다.
-#    print("words 리스트 출력:", words)                  # 출력 예 : ['account', 'achiever', 'actor', ...]
+#    print("words 리스트 출력:", words)                 # 출력 예 : ['account', 'achiever', 'actor', ...]
 
 #===============================================================================
 #=============================== 함수 정의 =======================================
 """
 변환 함수 생성 : convert(code_pice, sentence)
-[1] 코드조각(code_pice)와 문장(sentence)을 매개 변수로 갖는 변환 함수(convert())를 생성한다.
-[2] 코드조각에서 "%%%"의 개수를 구한다. -> words[리스트]에서 "%%%"의 개수만큼의 단어를 랜덤하게 추출하여 for문 변수 w에 담는다.
--> 변수 w에 담긴 word의 첫 글자를 대문자로(capitalize()) 바꿔서 class_names=[리스트]를 만든다.
-[3] 코드조각에서"***"의 개수를 구한다. -> 그 개수만큼 words[리스트]에서 word를 랜덤하게 추출한다.
+[1] 함수 이름은 convert이고, 2개의 매개 변수를 갖는다.
+[2] class_names : 코드조각에서 "%%%"의 개수를 구한다. -> words[리스트]에서 "%%%"의 개수만큼의 단어를 랜덤하게 추출한다.
+-> 변수 w에 담긴 word의 첫 글자를 대문자로(capitalize()) 바꿔서 class_names=[리스트]에 담는다.
+[3] other_names : 코드조각에서"***"의 개수를 구한다. -> 그 개수만큼 words[리스트]에서 word를 랜덤하게 추출한다.
 -> other_names=[리스트]를 만든다.
-[4]0부터 "@@@"의 개수 사이의 요소 1개를 for문 변수 i에 담는다.
+[4]0부터 "@@@"의 개수 사이의 요소 1개를 변수 i에 담는다.
 [5]randpint(1,2,3)에서 임의의 수 1개를 매개변수_수(param_num)에 담는다.
 [6]words[리스트]에서 randpoint에 의해 정해진 매개변수_수(param_num)만큼 무작위로 단어를 추출한다.
 [7]추출한 단어들을 (','.join)으로 구분하여 매개변수_이름들(param_names[리스트])에 추가(append)한다.
@@ -77,44 +77,64 @@ for word in urlopen(word_URL).readlines():
 def convert(code_pice, sentence):
     class_names = [w.capitalize() for w in
                         random.sample(words, code_pice.count("%%%"))]
-#    print("class_names 출력:", class_names)             # 출력 : ['Condition']
+    print("random.sample(words, code_pice.count(%%%)):", random.sample(words, code_pice.count("%%%")))
+    print("%%%의 개수:", code_pice.count("%%%")) #코드조각에서 "%%%"의 개수를 산정
+    print("코드_조각:", code_pice) #코드조각을 출력
+    print("class_names :", class_names)             # 출력 예: ['Condition']
     other_names = random.sample(words, code_pice.count("***"))
-#    print("other_names 출력:", other_names)             # 출력 : ['blade']
+    print("***의 개수:", code_pice.count("***"))
+    print("random.sample(words, code_pice.count(***)):", random.sample(words, code_pice.count("***")))
+    print("other_names 출력:", other_names)             # 출력 예: ['blade']
 
     results = []                         # 빈 결과들 리스트를 만든다.
     param_names = []                     # 빈 파라미터 이름 리스트를 만든다.
-
-    for i in range(0, code_pice.count("@@@")):      # range(시작, 끝)
+#첫 번째 for문
+    for i in range(0, code_pice.count("@@@")):      # 0부터 code_pice("@@@")의 개수를 하나씩 i에 대입
         param_num = random.randint(1, 3)            # 1, 2, 3 중 무작위로 하나
+        print("첫 번째 for문 i:", i, "param_num:", param_num)
         param_names.append(', '.join(               # param_names = [이름, 이름2, 이름3...]
             random.sample(words, param_num)))       # 단어들에서 매개변수 수만큼 무작위로 추출
+        print("첫 번째 for문 random.sample:", random.sample(words, param_num))
 
-    for sentence in code_pice, sentence:            # 코드조각과 문장의 요소를 sentence 변수에 담고, 이를 result 변수에 담는다.
+#두 번째 for문
+    for sentence in code_pice, sentence:
+        print("두 번째 for문 code_pice, sentence:", code_pice, sentence)
         result = sentence                           # class %%%(%%%):
-                                                    # %%% (이)라는 이름의 클래스를 만드는데 %%%의 일종이다.(is-a)
+        print("두 번째 for문 result sentence:", result)           # %%% (이)라는 이름의 클래스를 만드는데 %%%의 일종이다.(is-a)
+
         # 가짜 클래스 이름
-        for word in class_names:                    # "%%%"를 word로
+        for word in class_names:                    # "%%%"를  word로
             result = result.replace("%%%", word, 1) # result.replace(old, new[, count]) -> str
+            print("가짜 클래스 이름:", result)
 
         # 가짜 나머지 이름
         for word in other_names:
             result = result.replace("***", word, 1)
+            print("가짜 나머지 이름:", result)
 
         # 가짜 매개변수 이름
         for word in param_names:
             result = result.replace("@@@", word, 1)
+            print("가짜 매개변수 이름:", result)
 
         results.append(result)
+        print("마지막 results.append:", results)
     return results
+
 #================================ 함수 정의 끝 ====================================
 # CTRL -D를 누를 때까지 계속한다.
 """
-[1] code_pices = list(sentences.keys()): 문장들(sentences)에서 key에 해당하는 코드_조각(code_pices)을 리스트에 담는다.
+[1] code_pices = list(sentences.keys()): 문장들(sentences)에서 key에 해당하는 코드_조각을 코드_조각들(code_pices)을 리스트에 담는다.
 # 6개의 code_pice가 리스트에 담긴다.
 [2] random.shuffle(code_pices) : 코드_조각들[code_pices] 리스트 안의 요소들을 랜덤하게 섞는다.
 [3] for code_pice in code_pices: 코드_조각들 리스트에서 코드_조각을 꺼낸다.
 [4] sentence = sentences[code_pice] : 문장들(sentences) 사전에서 [code_pice]를 꺼내서 sentence에 담는다.
 # 출력 : sentence: *** 변수를 %%% 클래스의 인스턴스 하나로 정한다. / code_pice: *** = %%%()
+[5] question, answer = convert(code_pice, sentence) # 주어진 code_pice와 sentence를 변환하여 question, answer에 각각 담는다.
+# 왼쪽 출력 : question / answer : "butto = Balance()" / "butto 변수를 Balance 클래스의 인스턴스 하나로 정한다."
+# 오른쪽 출력 : code_pice / sentence : "*** = %%%()" / "클래스 %%%은/는 self와 *** 매개변수를 받는 __init__ 을 가졌다.(has-a)"
+[6] front_of_sentences = True일 때, question, answer는 answer, question으로 바꿔준다.
+[7] print(question) : question을 출력한다.
 """
 try:
     while True:
@@ -126,6 +146,8 @@ try:
             sentence = sentences[code_pice]     # key:value -> 사전{sentences}에서 sentences[code_pice]에 해당하는 문장을 찾는다.
             #print("sentence:", sentence, "code_pice:", code_pice)
             question, answer = convert(code_pice, sentence)
+            #print("question:", question, "answer:", answer)
+            #print("sentence:", sentence)
             if front_of_sentences:
                 question, answer = answer, question
 
@@ -135,3 +157,26 @@ try:
             print(f"answer: {answer}\n\n")
 except EOFError:
     print("\nEND")
+
+"""
+random.sample(words, code_pice.count(%%%)): []
+%%%의 개수: 0
+코드_조각: ***.*** = '***'
+class_names : []
+***의 개수: 3
+random.sample(words, code_pice.count(***)): ['dogs', 'beggar', 'beetle']
+other_names 출력: ['destruction', 'beast', 'boundary']
+두 번째 for문 code_pice, sentence: ***.*** = '***' ***.*** = '***'
+두 번째 for문 result sentence: ***.*** = '***'
+가짜 나머지 이름: destruction.*** = '***'
+가짜 나머지 이름: destruction.beast = '***'
+가짜 나머지 이름: destruction.beast = 'boundary'
+마지막 results.append: ["destruction.beast = 'boundary'"]
+두 번째 for문 code_pice, sentence: ***.*** = '***' *** 변수에서 *** 속성을 받아와 *** (으)로 값을 정한다.
+두 번째 for문 result sentence: *** 변수에서 *** 속성을 받아와 *** (으)로 값을 정한다.
+가짜 나머지 이름: destruction 변수에서 *** 속성을 받아와 *** (으)로 값을 정한다.
+가짜 나머지 이름: destruction 변수에서 beast 속성을 받아와 *** (으)로 값을 정한다.
+가짜 나머지 이름: destruction 변수에서 beast 속성을 받아와 boundary (으)로 값을 정한다.
+마지막 results.append: ["destruction.beast = 'boundary'", 'destruction 변수에서 beast 속성을 받아와 boundary (으)로 값을
+ 정한다.']
+ """
