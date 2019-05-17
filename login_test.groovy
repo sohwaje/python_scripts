@@ -7,12 +7,12 @@ import net.grinder.script.GTest
 import net.grinder.scriptengine.groovy.junit.GrinderRunner
 import net.grinder.scriptengine.groovy.junit.annotation.BeforeProcess
 import net.grinder.scriptengine.groovy.junit.annotation.BeforeThread
- 
+
 import org.junit.After
 import org.junit.Before;
 import org.junit.Test
 import org.junit.runner.RunWith
- 
+
 import HTTPClient.CookieModule
 import HTTPClient.HTTPResponse
 import HTTPClient.NVPair
@@ -65,7 +65,9 @@ class Login {
         def threadContext = HTTPPluginControl.getThreadHTTPClientContext()
         cookies.each {
             CookieModule.addCookie(it ,threadContext)
-            //grinder.logger.info("{}", it)
+            /* not required logger
+            grinder.logger.info("{}", it)
+            */
         }
     }
 
@@ -109,5 +111,3 @@ class Login {
         }
     }
 }
-
-
