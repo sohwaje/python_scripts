@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 
-# Grap a IP, PATH and URL in Apache Access_log
+# 아파치 에러로그의 특정 에러 메시지가 포함된 문자열을 IP와 URL 또는 Path로 구분하여 출력한다.
 """usage
 ]> python3.7 script_name apache_error.log
 """
@@ -15,7 +15,7 @@ script, file_name = argv
 ERROR_LOG = open(file_name, 'r')
 
 """
-정규식 컴파일
+찾을 문자열 패턴을 컴파일
 """
 def regular_expression_compile():
     p = '(?:[\d]+[.]\d+[.]\d+[.][\d]+)|(?:\s\/.*?\s)|http[s]?://(?:[a-zA-Z0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
@@ -23,7 +23,7 @@ def regular_expression_compile():
     return target_expression
 
 """
-FILE_DOES_NOT_EXIST 로그 찾기
+[1]FILE_DOES_NOT_EXIST 로그 찾기
 """
 def FILE_DOES_NOT_EXIST():
     num = 0
@@ -38,7 +38,7 @@ def FILE_DOES_NOT_EXIST():
             pass
 
 """
-CLIENT_DENIED_BY_SERVER_CONFIGURATION 로그 찾기
+[2]CLIENT_DENIED_BY_SERVER_CONFIGURATION 로그 찾기
 """
 def CLIENT_DENIED_BY_SERVER_CONFIGURATION():
     num = 0
@@ -53,7 +53,7 @@ def CLIENT_DENIED_BY_SERVER_CONFIGURATION():
 
 
 """
-스크립트 종료 함수
+스크립트 종료
 """
 def End_of_script(x):
     print(x, "Good Bye")
@@ -61,7 +61,7 @@ def End_of_script(x):
     exit(0)
 
 """
-스크립트 시작 함수 : 다자택일
+스크립트 시작
 """
 def start():
     print("FILE_DOES_NOT_EXIST                    : 1")
