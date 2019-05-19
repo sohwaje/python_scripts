@@ -71,14 +71,14 @@ def convert(code_pice, sentence):   #[1]
     results = []        # 리스트를 만든다.
     param_names = []
 
-#첫 번째 for문
+#매개 변수 이름 호출
     for i in range(0, code_pice.count("@@@")):                  #  for문 반복 횟수 : range(0, 2)이므로  for문은 1회 반복.
         param_num = random.randint(1, 3)                        # 1, 2, 3 중 무작위로 하나를 추출하여 param_num에 담는다.
         #print("for문의 매개변수(@@@)의 수:", param_num)          # 매개변수의 수가 3이면, param_name리스트에 담기는 단어는 3개가 된다.
         param_names.append(', '.join(
             random.sample(words, param_num)))                   # param_num의 개수만큼 매개변수 단어들을 무작위로 추출
 
-        #print("for문의 매개변수(param_names) 이름:", param_names)   # param_names = [매개변수1, 매개변수2...]
+        print("매개변수(param_names) 이름:", param_names)   # param_names = [매개변수1, 매개변수2...]
 
 # 두 번째 for문 : code_pice가 for문을 만나서 맨 마지막 results 리스트에 담기고, 그 다음 sentence가 for문을 만나서 results 리스트에 담긴다.
 # code_pice의 results를 먼저 리턴하고 다시 for문을 돌아 sentence의 results를 리턴한다. for문을 돌면서 특수문자는 단어로 치환된다.
