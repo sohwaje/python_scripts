@@ -16,13 +16,13 @@ memLimit = 10
 loadAverage = 0
 swapUsage = 2
 #==============================================================================
-serverName = 'sigong_messenger_was1'
+serverName = 'was1'
 title = '[' + serverName + ' 서버]\n'
 msg = title
 
 #Telegram bot 설정
-sigong_token = '851723999:AAFUkV3XFAHbujWNbbJO2AXr6dr3SKg8AWA'
-sigong = 137532606
+sigong_token = 'YOUR_TOKEN'
+sigong = YOUR_ID
 bot = telegram.Bot(token = sigong_token)
 
 """
