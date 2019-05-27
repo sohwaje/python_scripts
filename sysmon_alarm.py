@@ -11,10 +11,10 @@ import psutil
 """
 임계치 설정
 """
-cpuLimit = 50
-memLimit = 90
-loadAverage = 3
-swapUsage = 50
+cpuLimit = 0
+memLimit = 10
+loadAverage = 0
+swapUsage = 2
 #==============================================================================
 serverName = 'sigong_messenger_was1'
 title = '[' + serverName + ' 서버]\n'
@@ -34,24 +34,27 @@ def send(chat):
 LoadAverage
 """
 def getLoadAverage():
-    return round(psutil.getloadavg()[0]))
+    return round(psutil.getloadavg()[0])
 
-
-#cpu 사용률
+"""
+cpu 사용률
+"""
 def getCpuUsage():
-        cpu = 0
-        for x in range(2):
-            cpu += psutil.cpu_percent(interval=1)
+    cpu = 0
+    for x in range(2):
+        cpu += psutil.cpu_percent(interval=1)
         return round(float(cpu)/3,2)
 
-
-# swap 메모리 사용량
+"""
+swap 메모리 사용량
+"""
 def getSwapUsage():
-        return str(psutil.swap_memory()[3]))
-
-# Memory 사용량
-def getMemUsage(self):
-            return str(psutil.virtual_memory()[2])
+    return round(psutil.swap_memory()[3])
+"""
+Memory 사용량
+"""
+def getMemUsage():
+    return round(psutil.virtual_memory()[2])
 
 loadAvr = getLoadAverage()
 avgCpu = getCpuUsage()
@@ -59,7 +62,7 @@ memUsage = getMemUsage()
 swap = getSwapUsage()
 
 if loadAvr > loadAverage:
-        msg += 'LoadAverage(' + str(loadAverage)+') 초과\n'
+        msg += 'LoadAverage(' + str(loadAverage) + ') 초과\n'
         msg += '현재 LoadAverage : ' + str(loadAvr) + '\n'
         send(msg)
 
@@ -76,14 +79,4 @@ if memUsage > memLimit:
 if swap > swapUsage:
         msg += 'swap 메모리 사용량 기준값(' + str(swapUsage) + '%) 초과\n'
         msg += 'swap 메모리 사용량 : ' + str(swap) + '%\n'
-        send(mgs)
-
-#if avgCpu > cpuLimit or memUsage > memLimit:
-#        msg += serverName + ' 무엇무엇을 합니다'
-#        send(msg)
-#        os.system('커멘트라인 명령으로 필요한 작업, 필요없을 경우 주석처리')
-#        time.sleep(5)
-#        msg = title + '재시작후 cpu & memory는 아래와 같습니다.\n'
-#        msg += 'cpu usage : ' + str(getCpuUsage()) + '%\n'
-#        msg += 'memory usage : ' + str(getMemUsage()) + '%\n'
-#        send(msg)
+        send(msg)
