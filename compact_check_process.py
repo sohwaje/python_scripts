@@ -1,41 +1,251 @@
-import psutil
-"""
-psutil.process_iter() 함수를 호출하여 프로세스 이름으로 pid를 찾는다.
-"""
-def findProcessIdByName(processName):
-    listOfProcessObjects = []
-    for proc in psutil.process_iter():
+#!/opt/python3/bin/python3
+# -*- coding: utf-8 -*-
+
+import sys, os, time, psutil, signal, telegram, string, socket
+
+class Daemon(object):
+    """
+    Usage: - create your own a subclass Daemon class and override the run() method. Run() will be periodically the calling inside the infinite run loop
+           - you can receive reload signal from self.isReloadSignal and then you have to set back self.isReloadSignal = False
+    """
+
+    def __init__(self, stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
+        self.ver = 0.1  # version
+        self.pauseRunLoop = 0    # 0 means none pause between the calling of run() method.
+        self.restartPause = 1    # 0 means without a pause between stop and start during the restart of the daemon
+        self.waitToHardKill = 3  # when terminate a process, wait until kill the process with SIGTERM signal
+
+        self.isReloadSignal = False
+        self._canDaemonRun = True
+        self.processName = os.path.basename(sys.argv[0])
+        self.stdin = stdin
+        self.stdout = stdout
+        self.stderr = stderr
+
+    def _sigterm_handler(self, signum, frame):
+        self._canDaemonRun = False
+
+    def _reload_handler(self, signum, frame):
+        self.isReloadSignal = True
+
+    def _makeDaemon(self):
+        """
+        Make a daemon, do double-fork magic.
+        """
+
         try:
-            pinfo = proc.as_dict(attrs=['pid', 'name', 'username'])
-            if processName in pinfo['name']:
-                listOfProcessObjects.append(pinfo)
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            pass
-    return listOfProcessObjects;
+            pid = os.fork()
+            if pid > 0:
+                # Exit first parent.
+                sys.exit(0)
+        except OSError as e:
+            m = "Fork #1 failed: {}".format(e)
+            print(m)
+            sys.exit(1)
 
-process = "pppd"  #pid를 찾을 프로세스 이름
+        # Decouple from the parent environment.
+        os.chdir("/")
+        os.setsid()
+        os.umask(0)
 
-"""
-프로세스 상태 체크
-"""
-if findProcessIdByName(process):
-    print(f"{process} is running.")
-else:
-    print(f"{process} was down.")
+        # Do second fork.
+        try:
+            pid = os.fork()
+            if pid > 0:
+                # Exit from second parent.
+                sys.exit(0)
+        except OSError as e:
+            m = "Fork #2 failed: {}".format(e)
+            print(m)
+            sys.exit(1)
 
-"""
-findProcessIdByName 함수를 호출하여 받아온 값을 listOfprocessIds에 담는다.
-"""
-listOfprocessIds = findProcessIdByName(process)
+        m = "The daemon process is going to background."
+        print(m)
 
-"""
-listOfprocessIds의 값이 0보다 크면 for문을 진행하고, pid, name, username을 각각 변수에 담는다.
-"""
-if len(listOfprocessIds) > 0:
-    for element in listOfprocessIds:
-        processID = element['pid']
-        processName = element['name']
-        processUsername = element['username']
-        print(processID, processName, processUsername)
-else:
-    print('No Running Process found with given text')
+        # Redirect standard file descriptors.
+        sys.stdout.flush()
+        sys.stderr.flush()
+        si = open(self.stdin, 'r')
+        so = open(self.stdout, 'a+')
+        se = open(self.stderr, 'a+')
+        os.dup2(si.fileno(), sys.stdin.fileno())
+        os.dup2(so.fileno(), sys.stdout.fileno())
+        os.dup2(se.fileno(), sys.stderr.fileno())
+
+    def _getProces(self):
+        procs = []
+
+        for p in psutil.process_iter():
+            if self.processName in [part.split('/')[-1] for part in p.cmdline()]:
+                # Skip  the current process
+                if p.pid != os.getpid():
+                    procs.append(p)
+
+        return procs
+
+    def start(self):
+        """
+        Start daemon.
+        """
+
+        # Handle signals
+        signal.signal(signal.SIGINT, self._sigterm_handler)
+        signal.signal(signal.SIGTERM, self._sigterm_handler)
+        signal.signal(signal.SIGHUP, self._reload_handler)
+
+        # Check if the daemon is already running.
+        procs = self._getProces()
+
+        if procs:
+            m = "Find a previous daemon processes with PIDs {}. Is not already the daemon running?".format(",".join([str(p.pid) for p in procs]))
+            print(m)
+            sys.exit(1)
+        else:
+            m = "Start the daemon version {}".format(self.ver)
+            print(m)
+
+        # Daemonize the main process
+        self._makeDaemon()
+        # Start a infinitive loop that periodically runs run() method
+        self._infiniteLoop()
+
+    def version(self):
+        print("The daemon version {}".format(self.ver))
+
+    def status(self):
+        """
+        Get status of the daemon.
+        """
+
+        procs = self._getProces()
+
+        if procs:
+            m = "The daemon is running with PID {}.".format(",".join([str(p.pid) for p in procs]))
+            print(m)
+        else:
+            m = "The daemon is not running!"
+            print(m)
+
+    def reload(self):
+        """
+        Reload the daemon.
+        """
+
+        procs = self._getProces()
+
+        if procs:
+            for p in procs:
+                os.kill(p.pid, signal.SIGHUP)
+                m = "Send SIGHUP signal into the daemon process with PID {}.".format(p.pid)
+                print(m)
+        else:
+            m = "The daemon is not running!"
+            print(m)
+
+    def stop(self):
+        """
+        Stop the daemon.
+        """
+
+        procs = self._getProces()
+
+        def on_terminate(process):
+            m = "The daemon process with PID {} has ended correctly.".format(process.pid)
+            print(m)
+
+        if procs:
+            for p in procs:
+                p.terminate()
+
+            gone, alive = psutil.wait_procs(procs, timeout=self.waitToHardKill, callback=on_terminate)
+
+            for p in alive:
+                m = "The daemon process with PID {} was killed with SIGTERM!".format(p.pid)
+                print(m)
+                p.kill()
+        else:
+            m = "Cannot find some daemon process, I will do nothing."
+            print(m)
+
+    def restart(self):
+        """
+        Restart the daemon.
+        """
+        self.stop()
+
+        if self.restartPause:
+            time.sleep(self.restartPause)
+
+        self.start()
+
+    def _infiniteLoop(self):
+        try:
+            if self.pauseRunLoop:
+                time.sleep(self.pauseRunLoop)
+
+                while self._canDaemonRun:
+                    self.run()
+                    time.sleep(self.pauseRunLoop)
+            else:
+                while self._canDaemonRun:
+                    self.run()
+
+        except Exception as e:
+            m = "Run method failed: {}".format(e)
+            sys.stderr.write(m)
+            sys.exit(1)
+##################################################################################################
+serverName = 'was1'
+title = '[' + serverName + ']\n'
+msg = title
+
+#Telegram bot 설정
+sigong_token = '851723999:AAFUkV3XFAHbujWNbbJO2AXr6dr3SKg8AWA'
+sigong = '137532606'
+bot = telegram.Bot(token = sigong_token)
+
+class MyDaemon(Daemon):
+    def run(self):
+        while True:
+            for proc in psutil.process_iter():
+                try:
+                    pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline'])
+                except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                    pass
+                    if (pinfo['name'] == 'java' and '-Dserver=instance01' in pinfo['cmdline']):
+                        msg += 'Found running cassandra process with pid:' + str(pinfo['pid']) + '%\n'
+                        print('Found running cassandra process with pid: ' + str(pinfo['pid']) + '. Killing.')
+                        send(msg)
+                    else:
+                        print("Not Found")
+                        def send(chat):
+                            bot.sendMessage(sigong, chat, parse_mode='HTML')
+
+##################################################################################################
+if __name__ == "__main__":
+    daemon = MyDaemon()
+
+    usageMessage = "Usage: {} (start|stop|restart|status|reload|version)".format(sys.argv[0])
+
+    if len(sys.argv) == 2:
+        choice = sys.argv[1]
+        if choice == "start":
+            daemon.start()
+        elif choice == "stop":
+            daemon.stop()
+        elif choice == "restart":
+            daemon.restart()
+        elif choice == "status":
+            daemon.status()
+        elif choice == "reload":
+            daemon.reload()
+        elif choice == "version":
+            daemon.version()
+        else:
+            print("Unknown command.")
+            print(usageMessage)
+            sys.exit(1)
+        sys.exit(0)
+    else:
+        print(usageMessage)
+        sys.exit(1)
