@@ -195,19 +195,18 @@ class Daemon(object):
             sys.stderr.write(m)
             sys.exit(1)
 ##################################################################################################
-serverName = 'was1'
-title = '[' + serverName + ']\n'
-msg = title
-
-#Telegram bot 설정
-sigong_token = '851723999:AAFUkV3XFAHbujWNbbJO2AXr6dr3SKg8AWA'
-sigong = '137532606'
-bot = telegram.Bot(token = sigong_token)
-
 class MyDaemon(Daemon):
+    def send(chat):
+        serverName = 'was1'
+        title = '[' + serverName + ']\n'
+        msg = title
+        sigong_token = '851723999:AAFUkV3XFAHbujWNbbJO2AXr6dr3SKg8AWA'
+        sigong = '137532606'
+        bot = telegram.Bot(token = sigong_token)
+        bot.sendMessage(sigong, chat, parse_mode='HTML')
     def run(self):
-        while True:
-            for proc in psutil.process_iter():
+        for proc in psutil.process_iter():
+            while True:
                 try:
                     pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline'])
                 except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
@@ -218,8 +217,7 @@ class MyDaemon(Daemon):
                         send(msg)
                     else:
                         print("Not Found")
-                        def send(chat):
-                            bot.sendMessage(sigong, chat, parse_mode='HTML')
+
 
 ##################################################################################################
 if __name__ == "__main__":
