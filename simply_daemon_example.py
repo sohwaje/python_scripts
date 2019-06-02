@@ -23,6 +23,7 @@ def doTask():
         os.dup(0)
 
         while True:
+            time.sleep(5)
 #            for proc in psutil.process_iter():
 #                try:
 #                    pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline'])
@@ -34,6 +35,7 @@ def doTask():
 #                    else:
 #                        msg += 'Not Found'
 #                        pass
+#
 
 if __name__ == '__main__':
         daemon()
