@@ -1,5 +1,6 @@
 #!/opt/python3/bin/python3
 # -*- coding: utf-8 -*-
+import os, sys
 def daemon():
         try:
           pid = os.fork()
@@ -24,18 +25,6 @@ def doTask():
 
         while True:
             time.sleep(5)
-#            for proc in psutil.process_iter():
-#                try:
-#                    pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline'])
-#                except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-#                    pass
-#                    if (pinfo['name'] == 'java' and '-Dserver=instance01' in pinfo['cmdline']):
-#                        msg += 'Found running cassandra process with pid:' + str(pinfo['pid']) + '%\n'
-#                        send(msg)
-#                    else:
-#                        msg += 'Not Found'
-#                        pass
-#
 
 if __name__ == '__main__':
         daemon()
