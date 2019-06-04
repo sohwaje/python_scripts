@@ -53,7 +53,7 @@ def doTask():
             for proc in psutil.process_iter():
                 try:
                     pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline'])  # ex: {'cmdline': ['/usr/sbin/sshd'], 'name': 'sshd', 'pid': 874551} -> print(pinfo['cmdline'], pinfo['name'])
-                    if (pinfo['name'] == process and '-Dserver=instance01' in pinfo['cmdline']): # pinfo에 담긴 cmdline에 name이 java이고 -Dserver=instance01인 것이 있으면 참이다.
+                    if (pinfo['name'] == 'java' and '-Dserver=instance01' in pinfo['cmdline']): # pinfo에 담긴 cmdline에 name이 java이고 -Dserver=instance01인 것이 있으면 참이다.
                         pid_all.append(pinfo['pid'])                        # pid_all에 pid를 담는다.
                         if pinfo['pid'] not in p_list:                      # p_list에 타겟 pid가 없는가?
                             list_pid_name_cmdline.append(pinfo)             # pid, name, cmdline 요소를 list_pid_name_cmdline 담는다.
