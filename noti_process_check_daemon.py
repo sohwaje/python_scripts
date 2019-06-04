@@ -50,7 +50,7 @@ def doTask():
             pid_all = []                                                   # 오직 pid만 담겨 있는 빈 list 생성
             for proc in psutil.process_iter():
                 try:
-                    process = "java"
+                    process = "java"                                        #감시 대상 프로세스
                     instance = "-Dserver=instance01"
                     pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline'])  # ex: {'cmdline': ['/usr/sbin/sshd'], 'name': 'sshd', 'pid': 874551} -> print(pinfo['cmdline'], pinfo['name'])
                     if (pinfo['name'] == process and instance in pinfo['cmdline']): # pinfo에 담긴 cmdline에 name이 java이고 -Dserver=instance01인 것이 있으면 참이다.
