@@ -1,5 +1,3 @@
-#!/opt/python3/bin/python3
-# -*- coding: utf-8 -*-
 import telegram, os, socket, string, sys, psutil, daemon, time
 """
 서버 라벨 설정
@@ -52,13 +50,15 @@ def doTask():
             pid_all = []                                                   # 오직 pid만 담겨 있는 빈 list 생성
             for proc in psutil.process_iter():
                 try:
+                    process = "java"
+                    instance = "-Dserver=instance01"
                     pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline'])  # ex: {'cmdline': ['/usr/sbin/sshd'], 'name': 'sshd', 'pid': 874551} -> print(pinfo['cmdline'], pinfo['name'])
-                    if (pinfo['name'] == 'java' and '-Dserver=instance01' in pinfo['cmdline']): # pinfo에 담긴 cmdline에 name이 java이고 -Dserver=instance01인 것이 있으면 참이다.
+                    if (pinfo['name'] == process and instance in pinfo['cmdline']): # pinfo에 담긴 cmdline에 name이 java이고 -Dserver=instance01인 것이 있으면 참이다.
                         pid_all.append(pinfo['pid'])                        # pid_all에 pid를 담는다.
                         if pinfo['pid'] not in p_list:                      # p_list에 타겟 pid가 없는가?
                             list_pid_name_cmdline.append(pinfo)             # pid, name, cmdline 요소를 list_pid_name_cmdline 담는다.
                             msg = title
-                            msg += 'Found running -Dserver=instance01 with pid:' + str(pinfo['pid']) + '\n'
+                            msg += 'process UP:' + str(instance) + 'pid is :' + str(pinfo['pid']) + '\n'
                             p_list.append(pinfo['pid'])
                             send(msg)
 
@@ -70,7 +70,7 @@ def doTask():
                     if pid not in pid_all:                                     # pid_all 안에 타겟 pid가 없는가?
                         p_list.remove(pid)                                     # 없다면, 타겟 pid를 p_list에서 제거한다.
                         msg = title
-                        msg += 'Process Removed / pid:' + str(pid) + '\n'
+                        msg += 'Process DOWN / pid:' + str(pid) + '\n'
                         send(msg)
 
                 except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess) :
