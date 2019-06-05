@@ -54,13 +54,13 @@ def doTask():
         while True:
             list_pid_name_cmdline = []
             pid_all = []
+            pid_all.append(pinfo['pid'])
+            list_pid_name_cmdline.append(pinfo)
             for proc in psutil.process_iter():
                 try:
                     pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline'])  # ex: {'cmdline': ['/usr/sbin/sshd'], 'name': 'sshd', 'pid': 874551} -> print(pinfo['cmdline'], pinfo['name'])
                     if (pinfo['name'] == process and instance in pinfo['cmdline']):
-                        pid_all.append(pinfo['pid'])
                         if pinfo['pid'] not in p_list:
-                            list_pid_name_cmdline.append(pinfo)
                             msg = title
                             msg += 'process UP:' + str(instance) + 'pid is :' + str(pinfo['pid']) + '\n'
                             p_list.append(pinfo['pid'])
@@ -72,7 +72,7 @@ def doTask():
             for pid in p_list:
                 try:
                     if pid not in pid_all:
-                        p_list.remove(pid)                                     
+                        p_list.remove(pid)
                         msg = title
                         msg += 'Process DOWN / pid:' + str(pid) + '\n'
                         send(msg)
