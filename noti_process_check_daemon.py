@@ -13,6 +13,12 @@ sigong = '137532606'
 bot = telegram.Bot(token = sigong_token)
 
 """
+감시대상 프로세스 및 인스턴스 명
+"""
+process = "java"
+instance = "-Dserver=instance01"
+
+"""
 메세지 송신 함수
 """
 def send(chat):
@@ -46,17 +52,15 @@ def doTask():
         p_list=[]
 
         while True:
-            list_pid_name_cmdline = []                                     # pid, name, cmdline 요소를 담을 빈 list 생성
-            pid_all = []                                                   # 오직 pid만 담겨 있는 빈 list 생성
+            list_pid_name_cmdline = []
+            pid_all = []
             for proc in psutil.process_iter():
                 try:
-                    process = "java"                                        #감시 대상 프로세스
-                    instance = "-Dserver=instance01"
                     pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline'])  # ex: {'cmdline': ['/usr/sbin/sshd'], 'name': 'sshd', 'pid': 874551} -> print(pinfo['cmdline'], pinfo['name'])
-                    if (pinfo['name'] == process and instance in pinfo['cmdline']): # pinfo에 담긴 cmdline에 name이 java이고 -Dserver=instance01인 것이 있으면 참이다.
-                        pid_all.append(pinfo['pid'])                        # pid_all에 pid를 담는다.
-                        if pinfo['pid'] not in p_list:                      # p_list에 타겟 pid가 없는가?
-                            list_pid_name_cmdline.append(pinfo)             # pid, name, cmdline 요소를 list_pid_name_cmdline 담는다.
+                    if (pinfo['name'] == process and instance in pinfo['cmdline']):
+                        pid_all.append(pinfo['pid'])
+                        if pinfo['pid'] not in p_list:
+                            list_pid_name_cmdline.append(pinfo)
                             msg = title
                             msg += 'process UP:' + str(instance) + 'pid is :' + str(pinfo['pid']) + '\n'
                             p_list.append(pinfo['pid'])
@@ -67,8 +71,8 @@ def doTask():
 
             for pid in p_list:
                 try:
-                    if pid not in pid_all:                                     # pid_all 안에 타겟 pid가 없는가?
-                        p_list.remove(pid)                                     # 없다면, 타겟 pid를 p_list에서 제거한다.
+                    if pid not in pid_all:
+                        p_list.remove(pid)                                     
                         msg = title
                         msg += 'Process DOWN / pid:' + str(pid) + '\n'
                         send(msg)
