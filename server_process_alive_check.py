@@ -1,22 +1,32 @@
 import telegram, os, socket, string, sys, psutil, daemon, time
 """
+usage : python3.6 server_process_alive_check.py
+"""
+
+"""
 서버 라벨 설정
 """
 serverName = 'TEST_SERVER'
-title = '[' + serverName + ' 서버]\n'
+title = '[' + serverName + ']\n'
 
 """
 Telegram bot 설정
 """
-sigong_token = '851723999:AAFUkV3XFAHbujWNbbJO2AXr6dr3SKg8AWA'
-sigong = '137532606'
-bot = telegram.Bot(token = sigong_token)
+my_token = 'YOUR_TOKEN'
+my_id = 'YOUR_TELEGRAM_CHAT_ID'
+bot = telegram.Bot(token = my_token)
 
+"""
+감시 대상 프로세스 및 인스턴스
+"""
 process = "java"
-instances =['-Dserver=instance01', '-Dserver=instance02']
+instances =['-Dserver=instance01', '-Dserver=instance02', '-Dserver=instance03']
 
+"""
+메시지 전송 설정
+"""
 def send(chat):
-    bot.sendMessage(sigong, chat, parse_mode='HTML')
+    bot.sendMessage(my_id, chat, parse_mode='HTML')
 
 """
 데몬 생성 함수
@@ -32,9 +42,11 @@ def daemon():
             print('Unable to fork. Error: %d (%s)' % (error.errno, error.strerror))
             sys.exit()
 
-        doTask()
-
-def doTask():
+        process_chk()
+"""
+프로세스 상태 체크 함수
+"""
+def process_chk():
         "new session create"
         os.setsid()
 
@@ -42,35 +54,32 @@ def doTask():
         os.dup(0)
         os.dup(0)
 
-        p_list=[]
+        instance_list=[]
 
         while True:
-            list_pid_name_cmdline = []
-            pid_all = []
+            instance_all = []       # 모든 인스턴스를 담는다.
 
             for proc in psutil.process_iter():
                 try:
                     pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline'])
-                    pid_all.append(pinfo['pid'])
-                    list_pid_name_cmdline.append(pinfo)
                     for instance in instances:
                         if (pinfo['name'] == process and instance in pinfo['cmdline']):
-                            if pinfo['pid'] not in p_list:
+                            instance_all.append(instance)
+                            if instance not in instance_list:
+                                instance_list.append(instance)
                                 msg = title
-                                msg += 'process UP: ' + str(instance) + 'pid: ' + str(pinfo['pid']) + '\n'
-                                p_list.append(pinfo['pid'])
-                                print("추가:",p_list)# 2개 추가(ex: [668422, 670117])
+                                msg += 'process UP: ' + str(instance) + ' pid: ' + str(pinfo['pid']) + '\n'
                                 send(msg)
                                 break
                 except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess) :
                     pass
 
-            for pid in p_list:
+            for instance in instance_list:
                 try:
-                    if pid not in pid_all:
-                        p_list.remove(pid)
+                    if instance not in instance_all:
+                        instance_list.remove(instance)
                         msg = title
-                        msg += 'Process DOWN: ' + str(instance) + 'pid : ' + str(pid) + '\n'
+                        msg += 'Process DOWN: ' + str(instance) + '\n'
                         send(msg)
 
                 except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess) :
