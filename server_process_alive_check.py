@@ -21,7 +21,7 @@ my_id = 'YOUR_TELEGRAM_CHAT_ID'
 bot = telegram.Bot(token = my_token)
 
 """
-감시 대상 프로세스 및 인스턴스(감시 대상 프로세스 : java, 프로세스의 인스턴스 이름: -Dserver=instnace01)
+감시 대상 프로세스 및 인스턴스 변수 설정(감시 대상 프로세스 : java, 프로세스의 인스턴스 이름: -Dserver=instnace01)
 """
 process = "java"
 instances =['-Dserver=instance01', '-Dserver=instance02', '-Dserver=instance03']
