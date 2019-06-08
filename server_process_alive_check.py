@@ -66,7 +66,7 @@ def process_chk():
                 try:
                     pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline'])
                     for instance in instances:
-                        if (pinfo['name'] == process and instance in pinfo['cmdline']): # conditional statements
+                        if (pinfo['name'] == process and instance in pinfo['cmdline']): # 1st conditional statements
                             instance_all.append(instance)
                             if instance not in instance_list:
                                 instance_list.append(instance)
