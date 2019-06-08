@@ -4,20 +4,24 @@ usage : python3.6 server_process_alive_check.py
 """
 
 """
-서버 라벨 설정
+서버 라벨 설정(서버 또는 호스트의 이름)
 """
 serverName = 'TEST_SERVER'
 title = '[' + serverName + ']\n'
 
 """
-Telegram bot 설정
+Telegram bot의 token value 설정
 """
 my_token = 'YOUR_TOKEN'
 my_id = 'YOUR_TELEGRAM_CHAT_ID'
+
+"""
+봇에 메시지를 전달하는 설정
+"""
 bot = telegram.Bot(token = my_token)
 
 """
-감시 대상 프로세스 및 인스턴스
+감시 대상 프로세스 및 인스턴스(감시 대상 프로세스 : java, 프로세스의 인스턴스 이름: -Dserver=instnace01)
 """
 process = "java"
 instances =['-Dserver=instance01', '-Dserver=instance02', '-Dserver=instance03']
@@ -49,7 +53,6 @@ def daemon():
 def process_chk():
         "new session create"
         os.setsid()
-
         os.open("/dev/null", os.O_RDWR)
         os.dup(0)
         os.dup(0)
@@ -63,7 +66,7 @@ def process_chk():
                 try:
                     pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline'])
                     for instance in instances:
-                        if (pinfo['name'] == process and instance in pinfo['cmdline']):
+                        if (pinfo['name'] == process and instance in pinfo['cmdline']): # conditional statements
                             instance_all.append(instance)
                             if instance not in instance_list:
                                 instance_list.append(instance)
@@ -81,7 +84,6 @@ def process_chk():
                         msg = title
                         msg += 'Process DOWN: ' + str(instance) + '\n'
                         send(msg)
-
                 except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess) :
                     pass
 
