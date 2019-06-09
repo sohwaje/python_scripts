@@ -80,32 +80,45 @@ swap = getSwapUsage()
 root_Disk = getRootdisk()
 home_Disk = getHomedisk()
 
+loadAvr_list = []
+avgCpu_list = []
+memUsage_list = []
+swapUsage_list = []
+root_Disk_list = []
+home_Disk_list = []
+
 if loadAvr > loadAverage:
+    loadAvr_list.append(loadAvr)
         msg += 'LoadAverage(' + str(loadAverage) + ') 초과\n'
         msg += '현재 LoadAverage : ' + str(loadAvr) + '\n'
         send(msg)
 
 if avgCpu > cpuLimit:
+    avgCpu_list.append(avgCpu)
         msg += 'cpu 사용량이 기준값(' + str(cpuLimit) + '%) 초과\n'
         msg += 'cpu usage : ' + str(avgCpu) + '%\n'
         send(msg)
 
 if memUsage > memLimit:
+    memUsage_list.append(memUsage)
         msg += 'memory 사용량이 기준값(' + str(memLimit) + '%) 초과\n'
         msg += 'memory usage : ' + str(memUsage) + '%\n'
         send(msg)
 
 if swap > swapUsage:
+    swapUsage_list.append(swap)
         msg += 'swap 메모리 사용량 기준값(' + str(swapUsage) + '%) 초과\n'
         msg += 'swap 메모리 사용량 : ' + str(swap) + '%\n'
         send(msg)
 
 if root_Disk > root_disk:
+    root_Disk_list.append(root_Disk)
         msg += '디스크(/) 사용량 기준값(' + str(root_disk) + '%) 초과\n'
         msg += '현재 루트 디스크 사용량 : ' + str(root_Disk) + '%\n'
         send(msg)
 
 if home_Disk > home_disk:
+    home_Disk_list.append(home_Disk)
         msg += '디스크(/home) 사용량 기준값(' + str(home_disk) + '%) 초과\n'
         msg += '현재 (/home) 디스크 사용량 : ' + str(home_Disk) + '%\n'
         send(msg)
