@@ -1,69 +1,52 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import telegram
-import os
-import socket
-import string
-import sys
-import psutil
-import time
-
+import telegram, os, socket, string, sys, psutil, time
 
 """
-리소스 임계치 설정
+[1]감시 대상 서버 라벨 설정
 """
-normal_cpuLimit = 20
-normal_memLimit = 90
-normal_loadAverage = 3.0
-normal_swapUsage = 10
-normal_root_disk = 90
-normal_home_disk = 90
-
-
 serverName = 'TEST'
 title = '[' + serverName + ' 서버]\n'
 
-
-# Telegram bot 설정
+"""
+[2]Telegram bot token value
+"""
 sigong_token = '851723999:AAFUkV3XFAHbujWNbbJO2AXr6dr3SKg8AWA'
 sigong = '137532606'
 bot = telegram.Bot(token = sigong_token)
 
 """
-텔레그램 메세지 전송
+[3]텔레그램 메세지 전송
 """
 def send(chat):
         bot.sendMessage(sigong, chat, parse_mode='HTML')
 
 """
-리소스 사용량 체크
+[4]리소스 사용량 체크
 """
-def getLoadAverage():
+def getLoadAverage():                               # LoadAverage 측정
     return psutil.getloadavg()[0]
 
-def getCpuUsage():
+def getCpuUsage():                                  # CPU 사용률 측정
     cpu = 0
     for x in range(2):
         cpu += psutil.cpu_percent(interval=1)
         return round(float(cpu)/3,2)
 
-def getHomedisk():
-    return round(psutil.disk_usage('/home')[3])
-
-def getSwapUsage():
+def getSwapUsage():                                 # swap 메모리 측정
     return round(psutil.swap_memory()[3])
 
-def getMemUsage():
+def getMemUsage():                                  # 메모리 사용률 측정
     return round(psutil.virtual_memory()[2])
 
-def getRootdisk():
+def getRootdisk():                                  # 최상위 디렉토리(/) 사용량 측정
     return psutil.disk_usage('/')[3]
 
-def getHomedisk():
+def getHomedisk():                                  # home 디렉토리 사용량 측정
     return round(psutil.disk_usage('/home')[3])
 
 """
-현재 사용량
+[5]각 함수를 호출하여 현재 리소스 사용량을 가져온다.
 """
 current_load_Average = getLoadAverage()
 current_cpu_Usage = getCpuUsage()
@@ -73,7 +56,17 @@ current_root_Disk = getRootdisk()
 current_home_Disk = getHomedisk()
 
 """
-데몬 생성 함수
+[6]리소스 임계치
+"""
+normal_cpuLimit = 20
+normal_memLimit = 90
+normal_loadAverage = 3.0
+normal_swapUsage = 10
+normal_root_disk = 90
+normal_home_disk = 90
+
+"""
+[7]데몬 생성 함수
 """
 def daemon():
         try:
@@ -87,8 +80,9 @@ def daemon():
             sys.exit()
 
         sys_chk()
+
 """
-리소스 사용량 alert 설정
+[8]리소스 사용량 임계치보다 높으면 "[경고]" 메시지를 전송하고, 임계치 이하로 떨어지면 "[복구]" 메시지를 전송한다.
 """
 def sys_chk():
         "new session create"
@@ -101,7 +95,7 @@ def sys_chk():
 
         while True:
             msg = title
-            try:
+            try:            # 경고 block
                 current_home_Disk = getHomedisk()
                 if normal_home_disk < current_home_Disk:
                     if 1 not in home_alert_list:
@@ -113,7 +107,7 @@ def sys_chk():
             except:
                 pass
 
-            try:
+            try:            # 복구 block
                 if normal_home_disk >= current_home_Disk:
                     if 0 not in home_alert_list:
                         home_alert_list.remove(1)
