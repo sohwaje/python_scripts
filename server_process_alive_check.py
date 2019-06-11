@@ -73,7 +73,7 @@ def process_chk():
                                 msg = title
                                 msg += 'process UP: ' + str(instance) + ' pid: ' + str(pinfo['pid']) + '\n'
                                 send(msg)
-                                break
+                                
                 except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess) :
                     pass
 
