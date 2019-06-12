@@ -29,9 +29,9 @@ def getLoadAverage():                               # LoadAverage 측정
 
 def getCpuUsage():                                  # CPU 사용률 측정
     cpu = 0
-    for x in range(2):
-        cpu += psutil.cpu_percent(interval=1)
-        return round(float(cpu)/3,2)
+    for x in range(4):
+        cpu = psutil.cpu_percent(interval=1, percpu=False)
+        return cpu
 
 def getSwapUsage():                                 # swap 메모리 측정
     return round(psutil.swap_memory()[3])
@@ -58,10 +58,14 @@ current_home_Disk = getHomedisk()
 """
 [6]리소스 임계치
 """
-normal_cpuLimit = 20
-normal_memLimit = 90
 normal_loadAverage = 3.0
+normal_cpuLimit_first = 20
+normal_cpuLimit_second = 50
+normal_cpuLimit_third = 70
+normal_cpuLimit_fourth = 80
+normal_cpuLimit_fifth = 90
 normal_swapUsage = 10
+normal_memLimit = 90
 normal_root_disk = 90
 normal_home_disk = 90
 
@@ -92,10 +96,19 @@ def sys_chk():
         os.dup(0)
 
         home_alert_list = [0]
+        load_alert_list = [0]
+        cpu_alert_list = [0]
+        cpu_second_alert_list = [0]
+        cpu_third_alert_list = [0]
+        cpu_fourth_alert_list = [0]
+        cpu_fifth_alert_list = [0]
+        swap_alert_list = [0]
+        mem_alert_list = [0]
+        root_alert_list = [0]
 
         while True:
             msg = title
-            try:            # 경고 block
+            try:            # home disk 경고 block
                 current_home_Disk = getHomedisk()
                 if normal_home_disk < current_home_Disk:
                     if 1 not in home_alert_list:
@@ -107,12 +120,210 @@ def sys_chk():
             except:
                 pass
 
-            try:            # 복구 block
+            try:            # home disk 복구 block
                 if normal_home_disk >= current_home_Disk:
                     if 0 not in home_alert_list:
                         home_alert_list.remove(1)
                         home_alert_list.append(0)
                         msg += '[복구] 현재 /home 사용량 : ' + str(current_home_Disk) + '%\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # LoadAverage 경고 block
+                current_load_Average = getLoadAverage()
+                if normal_loadAverage < current_load_Average:
+                    if 1 not in load_alert_list:
+                        load_alert_list.remove(0)
+                        load_alert_list.append(1)
+                        msg += 'Average 임계치:  ' + str(normal_loadAverage) + '%\n'
+                        msg += '[경고] Average 사용량 : ' + str(current_load_Average) + '%\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # LoadAverage 복구 block
+                if normal_loadAverage >= current_load_Average:
+                    if 0 not in load_alert_list:
+                        load_alert_list.remove(1)
+                        load_alert_list.append(0)
+                        msg += '[복구] 현재 LoadAverage : ' + str(current_load_Average) + '%\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # first CPU 경고 block
+                current_cpu_Usage = getCpuUsage()
+                if normal_cpuLimit_first < current_cpu_Usage:
+                    if 1 not in cpu_alert_list:
+                        cpu_alert_list.remove(0)
+                        cpu_alert_list.append(1)
+                        msg += 'CPU 임계치:  ' + str(normal_cpuLimit_first) + '%\n'
+                        msg += '[경고] CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # first CPU 복구 block
+                if normal_cpuLimit_first >= current_cpu_Usage:
+                    if 0 not in cpu_alert_list:
+                        cpu_alert_list.remove(1)
+                        cpu_alert_list.append(0)
+                        msg += '[복구] 현재 CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # second CPU 경고 block
+                current_cpu_Usage = getCpuUsage()
+                if normal_cpuLimit_second < current_cpu_Usage:
+                    if 1 not in cpu_second_alert_list:
+                        cpu_second_alert_list.remove(0)
+                        cpu_second_alert_list.append(1)
+                        msg += 'CPU 임계치:  ' + str(normal_cpuLimit_second) + '%\n'
+                        msg += '[경고] CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # second CPU 복구 block
+                if normal_cpuLimit_second >= current_cpu_Usage:
+                    if 0 not in cpu_second_alert_list:
+                        cpu_second_alert_list.remove(1)
+                        cpu_second_alert_list.append(0)
+                        #msg += '[복구] 현재 CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
+                        #send(msg)
+            except:
+                pass
+
+            try:            # third CPU 경고 block
+                current_cpu_Usage = getCpuUsage()
+                if normal_cpuLimit_third < current_cpu_Usage:
+                    if 1 not in cpu_third_alert_list:
+                        cpu_third_alert_list.remove(0)
+                        cpu_third_alert_list.append(1)
+                        msg += 'CPU 임계치:  ' + str(normal_cpuLimit_third) + '%\n'
+                        msg += '[경고] CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # third CPU 복구 block
+                if normal_cpuLimit_third >= current_cpu_Usage:
+                    if 0 not in cpu_third_alert_list:
+                        cpu_third_alert_list.remove(1)
+                        cpu_third_alert_list.append(0)
+                        #msg += '[복구] 현재 CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
+                        #send(msg)
+            except:
+                pass
+
+            try:            # fourth CPU 경고 block
+                current_cpu_Usage = getCpuUsage()
+                if normal_cpuLimit_fourth < current_cpu_Usage:
+                    if 1 not in cpu_fourth_alert_list:
+                        cpu_fourth_alert_list.remove(0)
+                        cpu_fourth_alert_list.append(1)
+                        msg += 'CPU 임계치:  ' + str(normal_cpuLimit_fourth) + '%\n'
+                        msg += '[경고] CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # fourth CPU 복구 block
+                if normal_cpuLimit_fourth >= current_cpu_Usage:
+                    if 0 not in cpu_fourth_alert_list:
+                        cpu_fourth_alert_list.remove(1)
+                        cpu_fourth_alert_list.append(0)
+                        #msg += '[복구] 현재 CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
+                        #send(msg)
+            except:
+                pass
+
+            try:            # fifth CPU 경고 block
+                current_cpu_Usage = getCpuUsage()
+                if normal_cpuLimit_fifth < current_cpu_Usage:
+                    if 1 not in cpu_fifth_alert_list:
+                        cpu_fifth_alert_list.remove(0)
+                        cpu_fifth_alert_list.append(1)
+                        msg += 'CPU 임계치:  ' + str(normal_cpuLimit_fifth) + '%\n'
+                        msg += '[경고] CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # fifth CPU 복구 block
+                if normal_cpuLimit_fifth >= current_cpu_Usage:
+                    if 0 not in cpu_fifth_alert_list:
+                        cpu_fifth_alert_list.remove(1)
+                        cpu_fifth_alert_list.append(0)
+                        #msg += '[복구] 현재 CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
+                        #send(msg)
+            except:
+                pass
+
+            try:            # swap 경고 block
+                current_swap_Usage = getSwapUsage()
+                if normal_swapUsage < current_swap_Usage:
+                    if 1 not in swap_alert_list:
+                        swap_alert_list.remove(0)
+                        swap_alert_list.append(1)
+                        msg += 'SWAP 임계치:  ' + str(swap_alert_list) + '%\n'
+                        msg += '[경고] SWAP 사용량 : ' + str(current_swap_Usage) + '%\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # swap 복구 block
+                if normal_swapUsage >= current_swap_Usage:
+                    if 0 not in swap_alert_list:
+                        swap_alert_list.remove(1)
+                        swap_alert_list.append(0)
+                        msg += '[복구] 현재 SWAP 사용량 : ' + str(current_swap_Usage) + '%\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # MEM 경고 block
+                current_mem_Usage = getMemUsage()
+                if normal_memLimit < current_mem_Usage:
+                    if 1 not in mem_alert_list:
+                        mem_alert_list.remove(0)
+                        mem_alert_list.append(1)
+                        msg += 'Memory 임계치:  ' + str(normal_memLimit) + '%\n'
+                        msg += '[경고] Memory 사용량 : ' + str(current_mem_Usage) + '%\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # MEM 복구 block
+                if normal_memLimit >= current_mem_Usage:
+                    if 0 not in home_alert_list:
+                        mem_alert_list.remove(1)
+                        mem_alert_list.append(0)
+                        msg += '[복구] 현재 Memory 사용량 : ' + str(current_mem_Usage) + '%\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # / 디스크 경고 block
+                current_root_Disk = getRootdisk()
+                if normal_root_disk < current_root_Disk:
+                    if 1 not in root_alert_list:
+                        root_alert_list.remove(0)
+                        root_alert_list.append(1)
+                        msg += ' / 임계치:  ' + str(normal_root_disk) + '%\n'
+                        msg += '[경고] / 사용량 : ' + str(current_root_Disk) + '%\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # / 디스크 block
+                if normal_root_disk >= current_root_Disk:
+                    if 0 not in root_alert_list:
+                        root_alert_list.remove(1)
+                        root_alert_list.append(0)
+                        msg += '[복구] 현재 / 사용량 : ' + str(current_root_Disk) + '%\n'
                         send(msg)
             except:
                 pass
