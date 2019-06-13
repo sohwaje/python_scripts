@@ -18,7 +18,7 @@ swapUsage = 10
 root_disk = 90
 home_disk = 90
 #==============================================================================
-serverName = 'sigong_messenger_was1(26.145)'
+serverName = 'TEST'
 title = '[' + serverName + ' 서버]\n'
 msg = title
 
