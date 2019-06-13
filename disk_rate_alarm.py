@@ -99,7 +99,7 @@ def sys_chk():
 
         while True:
             msg = title
-            try:            # home disk 경고 block
+            try:
                 current_home_Disk = getHomedisk()
                 if normal_home_disk < current_home_Disk:
                     if home_alert == True:
@@ -107,18 +107,13 @@ def sys_chk():
                         msg += '/home 임계치:  ' + str(normal_home_disk) + '%\n'
                         msg += '[경고] /home 사용량 : ' + str(current_home_Disk) + '%\n'
                         send(msg)
-            except:
-                pass
-
-            try:            # home disk 복구 block
-                if normal_home_disk >= current_home_Disk:
+                elif normal_home_disk >= current_home_Disk:
                     if home_alert == False:
                         home_alert = True
                         msg += '[복구] 현재 /home 사용량 : ' + str(current_home_Disk) + '%\n'
                         send(msg)
             except:
                 pass
-
 
             time.sleep(3)
 
