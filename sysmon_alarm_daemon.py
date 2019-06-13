@@ -58,16 +58,20 @@ current_home_Disk = getHomedisk()
 """
 [6]리소스 임계치
 """
-normal_loadAverage = 3.0
+normal_root_disk = 90
+normal_home_disk = 4
+normal_loadAverage_first = 3.0
+normal_loadAverage_second = 5.0
+normal_loadAverage_third = 10.0
+normal_swapUsage = 10
 normal_cpuLimit_first = 20
 normal_cpuLimit_second = 50
 normal_cpuLimit_third = 70
 normal_cpuLimit_fourth = 80
 normal_cpuLimit_fifth = 90
-normal_swapUsage = 10
-normal_memLimit = 90
-normal_root_disk = 90
-normal_home_disk = 90
+normal_memLimit_first = 60
+normal_memLimit_second = 80
+normal_memLimit_third = 90
 
 """
 [7]데몬 생성 함수
@@ -86,7 +90,7 @@ def daemon():
         sys_chk()
 
 """
-[8]리소스 사용량 임계치보다 높으면 "[경고]" 메시지를 전송하고, 임계치 이하로 떨어지면 "[복구]" 메시지를 전송한다.
+[8]리소스 사용량이 정의된 임계치보다 높으면 "[경고]" 메시지를 전송하고, 임계치 이하면 "[복구]" 메시지를 전송한다.
 """
 def sys_chk():
         "new session create"
@@ -95,59 +99,112 @@ def sys_chk():
         os.dup(0)
         os.dup(0)
 
-        home_alert_list = [0]
-        load_alert_list = [0]
-        cpu_alert_list = [0]
-        cpu_second_alert_list = [0]
-        cpu_third_alert_list = [0]
-        cpu_fourth_alert_list = [0]
-        cpu_fifth_alert_list = [0]
-        swap_alert_list = [0]
-        mem_alert_list = [0]
-        root_alert_list = [0]
+        home_alert = True
+        root_alert = True
+        load_alert_first = True
+        load_alert_second = True
+        load_alert_third = True
+        cpu_first_alert = True
+        cpu_second_alert = True
+        cpu_third_alert = True
+        cpu_fourth_alert = True
+        cpu_fifth_alert = True
+        swap_alert = True
+        mem_first_alert = True
+        mem_second_alert = True
+        mem_third_alert = True
+
 
         while True:
             msg = title
-            try:            # home disk 경고 block
+            try:
                 current_home_Disk = getHomedisk()
                 if normal_home_disk < current_home_Disk:
-                    if 1 not in home_alert_list:
-                        home_alert_list.remove(0)
-                        home_alert_list.append(1)
+                    if home_alert == True:
+                        home_alert = False
                         msg += '/home 임계치:  ' + str(normal_home_disk) + '%\n'
                         msg += '[경고] /home 사용량 : ' + str(current_home_Disk) + '%\n'
                         send(msg)
-            except:
-                pass
-
-            try:            # home disk 복구 block
-                if normal_home_disk >= current_home_Disk:
-                    if 0 not in home_alert_list:
-                        home_alert_list.remove(1)
-                        home_alert_list.append(0)
+                elif normal_home_disk >= current_home_Disk:
+                    if home_alert == False:
+                        home_alert = True
                         msg += '[복구] 현재 /home 사용량 : ' + str(current_home_Disk) + '%\n'
                         send(msg)
             except:
                 pass
 
-            try:            # LoadAverage 경고 block
-                current_load_Average = getLoadAverage()
-                if normal_loadAverage < current_load_Average:
-                    if 1 not in load_alert_list:
-                        load_alert_list.remove(0)
-                        load_alert_list.append(1)
-                        msg += 'Average 임계치:  ' + str(normal_loadAverage) + '%\n'
-                        msg += '[경고] Average 사용량 : ' + str(current_load_Average) + '%\n'
+            try:            # / 디스크 경고 block
+                current_root_Disk = getRootdisk()
+                if normal_root_disk < current_root_Disk:
+                    if root_alert == True:
+                        root_alert = False
+                        msg += ' / 임계치:  ' + str(normal_root_disk) + '%\n'
+                        msg += '[경고] / 사용량 : ' + str(current_root_Disk) + '%\n'
+                        send(msg)
+                elif normal_root_disk >= current_root_Disk:
+                    if root_alert == False:
+                        root_alert = True
+                        msg += '[복구] 현재 / 사용량 : ' + str(current_root_Disk) + '%\n'
                         send(msg)
             except:
                 pass
 
-            try:            # LoadAverage 복구 block
-                if normal_loadAverage >= current_load_Average:
-                    if 0 not in load_alert_list:
-                        load_alert_list.remove(1)
-                        load_alert_list.append(0)
-                        msg += '[복구] 현재 LoadAverage : ' + str(current_load_Average) + '%\n'
+            try:            # first LoadAverage alert block
+                current_load_Average = getLoadAverage()
+                if normal_loadAverage_first < current_load_Average:
+                    if load_alert_first == True:
+                        load_alert_first = False
+                        msg += 'LoadAverage 임계치:  ' + str(normal_loadAverage_first) + '\n'
+                        msg += '[경고] LoadAverage : ' + str(current_load_Average) + '\n'
+                        send(msg)
+                elif normal_loadAverage_first >= current_load_Average:
+                    if load_alert_first == False:
+                        load_alert_first = True
+                        msg += '[복구] 현재 LoadAverage : ' + str(current_load_Average) + '\n'
+                        send(msg)
+            except:
+                pass
+
+            try:            # second LoadAverage alert block
+                current_load_Average = getLoadAverage()
+                if normal_loadAverage_second < current_load_Average:
+                    if load_alert_second == True:
+                        load_alert_second = False
+                        msg += 'LoadAverage 임계치:  ' + str(normal_loadAverage_second) + '\n'
+                        msg += '[경고] LoadAverage : ' + str(current_load_Average) + '\n'
+                        send(msg)
+                elif normal_loadAverage_second >= current_load_Average:
+                    if load_alert_second == False:
+                        load_alert_second = True
+            except:
+                pass
+
+            try:            # third LoadAverage alert block
+                current_load_Average = getLoadAverage()
+                if normal_loadAverage_third < current_load_Average:
+                    if load_alert_third == True:
+                        load_alert_third = False
+                        msg += 'LoadAverage 임계치:  ' + str(normal_loadAverage_third) + '\n'
+                        msg += '[경고] LoadAverage : ' + str(current_load_Average) + '\n'
+                        send(msg)
+                elif normal_loadAverage_third >= current_load_Average:
+                    if load_alert_third == False:
+                        load_alert_third = True
+            except:
+                pass
+
+            try:            # swap 경고 block
+                current_swap_Usage = getSwapUsage()
+                if normal_swapUsage < current_swap_Usage:
+                    if swap_alert == True:
+                        swal_alert = False
+                        msg += 'SWAP 임계치:  ' + str(swap_alert_list) + '%\n'
+                        msg += '[경고] SWAP 사용량 : ' + str(current_swap_Usage) + '%\n'
+                        send(msg)
+                elif normal_swapUsage >= current_swap_Usage:
+                    if swap_alert == False:
+                        swap_alert = True
+                        msg += '[복구] 현재 SWAP 사용량 : ' + str(current_swap_Usage) + '%\n'
                         send(msg)
             except:
                 pass
@@ -155,20 +212,14 @@ def sys_chk():
             try:            # first CPU 경고 block
                 current_cpu_Usage = getCpuUsage()
                 if normal_cpuLimit_first < current_cpu_Usage:
-                    if 1 not in cpu_alert_list:
-                        cpu_alert_list.remove(0)
-                        cpu_alert_list.append(1)
+                    if cpu_first_alert == True:
+                        cpu_first_alert = False
                         msg += 'CPU 임계치:  ' + str(normal_cpuLimit_first) + '%\n'
                         msg += '[경고] CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
                         send(msg)
-            except:
-                pass
-
-            try:            # first CPU 복구 block
-                if normal_cpuLimit_first >= current_cpu_Usage:
-                    if 0 not in cpu_alert_list:
-                        cpu_alert_list.remove(1)
-                        cpu_alert_list.append(0)
+                elif normal_cpuLimit_first >= current_cpu_Usage:
+                    if cpu_first_alert == False:
+                        cpu_first_alert = True
                         msg += '[복구] 현재 CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
                         send(msg)
             except:
@@ -177,156 +228,103 @@ def sys_chk():
             try:            # second CPU 경고 block
                 current_cpu_Usage = getCpuUsage()
                 if normal_cpuLimit_second < current_cpu_Usage:
-                    if 1 not in cpu_second_alert_list:
-                        cpu_second_alert_list.remove(0)
-                        cpu_second_alert_list.append(1)
+                    if cpu_second_alert == True:
+                        cpu_second_alert = False
                         msg += 'CPU 임계치:  ' + str(normal_cpuLimit_second) + '%\n'
                         msg += '[경고] CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
                         send(msg)
-            except:
-                pass
-
-            try:            # second CPU 복구 block
-                if normal_cpuLimit_second >= current_cpu_Usage:
-                    if 0 not in cpu_second_alert_list:
-                        cpu_second_alert_list.remove(1)
-                        cpu_second_alert_list.append(0)
-                        #msg += '[복구] 현재 CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
-                        #send(msg)
+                elif normal_cpuLimit_second >= current_cpu_Usage:
+                    if cpu_second_alert == False:
+                        cpu_second_alert = True
             except:
                 pass
 
             try:            # third CPU 경고 block
                 current_cpu_Usage = getCpuUsage()
                 if normal_cpuLimit_third < current_cpu_Usage:
-                    if 1 not in cpu_third_alert_list:
-                        cpu_third_alert_list.remove(0)
-                        cpu_third_alert_list.append(1)
+                    if cpu_third_alert == True:
+                        cpu_third_alert = False
                         msg += 'CPU 임계치:  ' + str(normal_cpuLimit_third) + '%\n'
                         msg += '[경고] CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
                         send(msg)
-            except:
-                pass
-
-            try:            # third CPU 복구 block
-                if normal_cpuLimit_third >= current_cpu_Usage:
-                    if 0 not in cpu_third_alert_list:
-                        cpu_third_alert_list.remove(1)
-                        cpu_third_alert_list.append(0)
-                        #msg += '[복구] 현재 CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
-                        #send(msg)
+                elif normal_cpuLimit_third >= current_cpu_Usage:
+                    if cpu_third_alert == False:
+                        cpu_third_alert = True
             except:
                 pass
 
             try:            # fourth CPU 경고 block
                 current_cpu_Usage = getCpuUsage()
                 if normal_cpuLimit_fourth < current_cpu_Usage:
-                    if 1 not in cpu_fourth_alert_list:
-                        cpu_fourth_alert_list.remove(0)
-                        cpu_fourth_alert_list.append(1)
+                    if cpu_fourth_alert == True:
+                        cpu_fourth_alert = False
                         msg += 'CPU 임계치:  ' + str(normal_cpuLimit_fourth) + '%\n'
                         msg += '[경고] CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
                         send(msg)
-            except:
-                pass
-
-            try:            # fourth CPU 복구 block
-                if normal_cpuLimit_fourth >= current_cpu_Usage:
-                    if 0 not in cpu_fourth_alert_list:
-                        cpu_fourth_alert_list.remove(1)
-                        cpu_fourth_alert_list.append(0)
-                        #msg += '[복구] 현재 CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
-                        #send(msg)
+                elif normal_cpuLimit_fourth >= current_cpu_Usage:
+                    if cpu_fourth_alert == False:
+                        cpu_fourth_alert = True
             except:
                 pass
 
             try:            # fifth CPU 경고 block
                 current_cpu_Usage = getCpuUsage()
                 if normal_cpuLimit_fifth < current_cpu_Usage:
-                    if 1 not in cpu_fifth_alert_list:
-                        cpu_fifth_alert_list.remove(0)
-                        cpu_fifth_alert_list.append(1)
+                    if cpu_fifth_alert == True:
+                        cpu_fifth_alert = False
                         msg += 'CPU 임계치:  ' + str(normal_cpuLimit_fifth) + '%\n'
                         msg += '[경고] CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
                         send(msg)
+                elif normal_cpuLimit_fifth >= current_cpu_Usage:
+                    if cpu_fifth_alert == False:
+                        cpu_fifth_alert = True
             except:
                 pass
 
-            try:            # fifth CPU 복구 block
-                if normal_cpuLimit_fifth >= current_cpu_Usage:
-                    if 0 not in cpu_fifth_alert_list:
-                        cpu_fifth_alert_list.remove(1)
-                        cpu_fifth_alert_list.append(0)
-                        #msg += '[복구] 현재 CPU 사용량 : ' + str(current_cpu_Usage) + '%\n'
-                        #send(msg)
-            except:
-                pass
-
-            try:            # swap 경고 block
-                current_swap_Usage = getSwapUsage()
-                if normal_swapUsage < current_swap_Usage:
-                    if 1 not in swap_alert_list:
-                        swap_alert_list.remove(0)
-                        swap_alert_list.append(1)
-                        msg += 'SWAP 임계치:  ' + str(swap_alert_list) + '%\n'
-                        msg += '[경고] SWAP 사용량 : ' + str(current_swap_Usage) + '%\n'
-                        send(msg)
-            except:
-                pass
-
-            try:            # swap 복구 block
-                if normal_swapUsage >= current_swap_Usage:
-                    if 0 not in swap_alert_list:
-                        swap_alert_list.remove(1)
-                        swap_alert_list.append(0)
-                        msg += '[복구] 현재 SWAP 사용량 : ' + str(current_swap_Usage) + '%\n'
-                        send(msg)
-            except:
-                pass
-
-            try:            # MEM 경고 block
+            try:            # first memory rate alert block
                 current_mem_Usage = getMemUsage()
-                if normal_memLimit < current_mem_Usage:
-                    if 1 not in mem_alert_list:
-                        mem_alert_list.remove(0)
-                        mem_alert_list.append(1)
-                        msg += 'Memory 임계치:  ' + str(normal_memLimit) + '%\n'
+                if normal_memLimit_first < current_mem_Usage:
+                    if mem_first_alert == True:
+                        mem_first_alert = False
+                        msg += 'Memory 임계치:  ' + str(normal_memLimit_first) + '%\n'
                         msg += '[경고] Memory 사용량 : ' + str(current_mem_Usage) + '%\n'
                         send(msg)
-            except:
-                pass
-
-            try:            # MEM 복구 block
-                if normal_memLimit >= current_mem_Usage:
-                    if 0 not in home_alert_list:
-                        mem_alert_list.remove(1)
-                        mem_alert_list.append(0)
+                elif normal_memLimit_first >= current_mem_Usage:
+                    if mem_first_alert == False:
+                        mem_first_alert = True
                         msg += '[복구] 현재 Memory 사용량 : ' + str(current_mem_Usage) + '%\n'
                         send(msg)
             except:
                 pass
 
-            try:            # / 디스크 경고 block
-                current_root_Disk = getRootdisk()
-                if normal_root_disk < current_root_Disk:
-                    if 1 not in root_alert_list:
-                        root_alert_list.remove(0)
-                        root_alert_list.append(1)
-                        msg += ' / 임계치:  ' + str(normal_root_disk) + '%\n'
-                        msg += '[경고] / 사용량 : ' + str(current_root_Disk) + '%\n'
+            try:            # second memory rate alert block
+                current_mem_Usage = getMemUsage()
+                if normal_memLimit_second < current_mem_Usage:
+                    if mem_second_alert == True:
+                        mem_second_alert = False
+                        msg += 'Memory 임계치:  ' + str(normal_memLimit_second) + '%\n'
+                        msg += '[경고] Memory 사용량 : ' + str(current_mem_Usage) + '%\n'
                         send(msg)
+                elif normal_memLimit_second >= current_mem_Usage:
+                    if mem_second_alert == False:
+                        mem_second_alert = True
             except:
                 pass
 
-            try:            # / 디스크 block
-                if normal_root_disk >= current_root_Disk:
-                    if 0 not in root_alert_list:
-                        root_alert_list.remove(1)
-                        root_alert_list.append(0)
-                        msg += '[복구] 현재 / 사용량 : ' + str(current_root_Disk) + '%\n'
+            try:            # third memory rate alert block
+                current_mem_Usage = getMemUsage()
+                if normal_memLimit_third < current_mem_Usage:
+                    if mem_third_alert == True:
+                        mem_third_alert = False
+                        msg += 'Memory 임계치:  ' + str(normal_memLimit_third) + '%\n'
+                        msg += '[경고] Memory 사용량 : ' + str(current_mem_Usage) + '%\n'
                         send(msg)
+                elif normal_memLimit_third >= current_mem_Usage:
+                    if mem_third_alert == False:
+                        mem_third_alert = True
             except:
                 pass
+
             time.sleep(3)
 
 if __name__ == '__main__':
