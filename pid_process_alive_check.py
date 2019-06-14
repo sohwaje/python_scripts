@@ -8,8 +8,8 @@ title = '[' + serverName + ' 서버]\n'
 """
 Telegram bot 설정
 """
-sigong_token = '851723999:AAFUkV3XFAHbujWNbbJO2AXr6dr3SKg8AWA'
-sigong = '137532606'
+sigong_token = 'YOUR_TOKEN'
+sigong = 'YOUR_CHAT_ID'
 bot = telegram.Bot(token = sigong_token)
 
 """
