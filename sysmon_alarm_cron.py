@@ -1,12 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import telegram
-import os
-import socket
-import string
-import sys
-import psutil
-
+import telegram, os, socket, string, sys, psutil
 
 """
 임계치 설정
