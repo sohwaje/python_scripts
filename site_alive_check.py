@@ -1,43 +1,95 @@
-import requests, socket, time, datetime, urllib.request
+import telegram
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+import requests, sys, time, daemon, os, socket, string, sys
 from requests.exceptions import Timeout
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+
 
 """
-url_list.txt을 생성하고 그 안에 감시해야 할 url을 넣는다. ex) www.googld.com
+서버 라벨 설정(서버 또는 호스트의 이름)
 """
-port = 80
-def http_url_list(url):
-    f = open(url, 'r')
-    data = f.readlines()
-    f.close()
-    return data
+serverName = 'TEST_SERVER'
+title = '[' + serverName + ']\n'
 
-def port_check(url):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # UDP는 socket.SOCK_DGRAM
+"""
+Telegram bot의 token value 설정
+"""
+my_token = '851723999:AAFUkV3XFAHbujWNbbJO2AXr6dr3SKg8AWA'
+my_id = '137532606'
+
+"""
+봇에 메시지를 전달하는 설정
+"""
+bot = telegram.Bot(token = my_token)
+
+"""
+메시지 전송 설정
+"""
+def send(chat):
+    bot.sendMessage(my_id, chat, parse_mode='HTML')
+
+"""
+# 파싱할 페이지 리스트
+"""
+http_url_page_list = ['http://websocket.sigongmedia.co.kr:80', 'http://websocket2.sigongmedia.co.kr:80', 'http://www.instance01.com:80']
+http_url_page_check_temp = [False, False, False]
+http_url_page_check_list = [False, False, False]
+
+"""
+데몬 생성 함수
+"""
+def daemon():
+    global http_url_page_check_list
+    global http_url_page_check_temp
+
     try:
-        s.connect((url, port))
-        #return "Open"
-    except socket.error as e:
-        pass
-        #print(url, " on port: ", str(port))
+        pid = os.fork()
+        if pid > 0:
+            print('PID: %d' % pid)
+            sys.exit()
+
+    except OSError as error:
+        print('Unable to fork. Error: %d (%s)' % (error.errno, error.strerror))
+        sys.exit()
+
+    while True:
+        url_alive_check()
+        idx = 0
+        message = ""
+        for element in http_url_page_list:
+            prev = http_url_page_check_list[idx]
+            temp = http_url_page_check_temp[idx]
+            if ( prev != temp ):
+                if temp:
+                    message += element + " is UP \r\n"
+                else:
+                    message += element + " is DOWN \r\n"
+            http_url_page_check_list[idx] = http_url_page_check_temp[idx]
+            idx = idx + 1
+
+        if len(message) > 0:
+            send(message)
+
+        time.sleep(3)
 
 
-def webpage_check(url):
-    full_url = "http://" + url
-    print(full_url)
-    try:
-        html = urllib.request.urlopen(full_url, timeout=3)
-        return "Open" #return True
-    except urllib.request.URLError as err:
-        return err  #return False
-    except:
-        return "Some other error"
+def url_alive_check():
+    global http_url_page_check_list
+    global http_url_page_check_temp
 
-#if __name__ == '__main__':
-url_list = http_url_list("url_list.txt")
+    idx = 0
+    for url_page in http_url_page_list:
+        try:
+            res = requests.get(url_page, timeout=2)
+            if res.status_code == requests.codes.ok:
+                http_url_page_check_temp[idx] = True
+        except (requests.RequestException, requests.ConnectionError) as e:
+            http_url_page_check_temp[idx] = False
+        idx = idx + 1
 
-for i in url_list:
-    url = i.split()
-    port_checked = port_check(url[0])
-    print("port_checked", port_checked)
-    webpage_checked = webpage_check(url[0])
-    print("webpage_checked", webpage_checked)
+    #print("list -> " + str(http_url_page_check_list[0]) + "/" + str(http_url_page_check_list[1]) + "/" + str(http_url_page_check_list[2]) )
+    #print("temp -> " + str(http_url_page_check_temp[0]) + "/" + str(http_url_page_check_temp[1]) + "/" + str(http_url_page_check_temp[2]) )
+
+if __name__ == '__main__':
+    daemon()
