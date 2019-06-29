@@ -40,21 +40,21 @@ URL Alive 체크 함수
 """
 def GET_URL_ALIVE_CHECK(url):
         try:
-            res = requests.get(url, timeout=2)
+            res = requests.get(url, timeout=3)
             if res.status_code == requests.codes.ok:
                 return True
         except (requests.RequestException, requests.ConnectionError) as e:
             return False
 
 """
-현재 URL 서비스 상태 저장
+현재 URL 서비스 상태를 변수에 담는다.
 """
 current_url_1_status = GET_URL_ALIVE_CHECK(url_1)
 current_url_2_status = GET_URL_ALIVE_CHECK(url_2)
 current_url_3_status = GET_URL_ALIVE_CHECK(url_3)
 
 """
-데몬 생성 함수
+데몬 생성
 """
 def daemon():
     try:
@@ -70,7 +70,7 @@ def daemon():
     GET_URL_STATUS_CHK()
 
 """
-URL 상태 체크 함수
+URL 상태 체크
 """
 def GET_URL_STATUS_CHK():
         os.setsid()
