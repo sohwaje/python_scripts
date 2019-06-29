@@ -5,7 +5,6 @@ from requests.exceptions import Timeout
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
-
 """
 서버 라벨 설정(서버 또는 호스트의 이름)
 """
@@ -30,19 +29,34 @@ def send(chat):
     bot.sendMessage(my_id, chat, parse_mode='HTML')
 
 """
-# 파싱할 페이지 리스트
+감시 대상 URL:port
 """
-http_url_page_list = ['http://websocket.sigongmedia.co.kr:80', 'http://websocket2.sigongmedia.co.kr:80', 'http://www.instance01.com:80']
-http_url_page_check_temp = [False, False, False]
-http_url_page_check_list = [False, False, False]
+url_1 = 'http://www.example.com:80'
+url_2 = 'http://www2.example.com:80'
+url_3 = 'http://www3.example.com:80'
+
+"""
+URL Alive 체크 함수
+"""
+def GET_URL_ALIVE_CHECK(url):
+        try:
+            res = requests.get(url, timeout=2)
+            if res.status_code == requests.codes.ok:
+                return True
+        except (requests.RequestException, requests.ConnectionError) as e:
+            return False
+
+"""
+현재 URL 서비스 상태 저장
+"""
+current_url_1_status = GET_URL_ALIVE_CHECK(url_1)
+current_url_2_status = GET_URL_ALIVE_CHECK(url_2)
+current_url_3_status = GET_URL_ALIVE_CHECK(url_3)
 
 """
 데몬 생성 함수
 """
 def daemon():
-    global http_url_page_check_list
-    global http_url_page_check_temp
-
     try:
         pid = os.fork()
         if pid > 0:
@@ -53,43 +67,70 @@ def daemon():
         print('Unable to fork. Error: %d (%s)' % (error.errno, error.strerror))
         sys.exit()
 
-    while True:
-        url_alive_check()
-        idx = 0
-        message = ""
-        for element in http_url_page_list:
-            prev = http_url_page_check_list[idx]
-            temp = http_url_page_check_temp[idx]
-            if ( prev != temp ):
-                if temp:
-                    message += element + " is UP \r\n"
-                else:
-                    message += element + " is DOWN \r\n"
-            http_url_page_check_list[idx] = http_url_page_check_temp[idx]
-            idx = idx + 1
+    GET_URL_STATUS_CHK()
 
-        if len(message) > 0:
-            send(message)
+"""
+URL 상태 체크 함수
+"""
+def GET_URL_STATUS_CHK():
+        os.setsid()
+        os.open("/dev/null", os.O_RDWR)
+        os.dup(0)
+        os.dup(0)
 
-        time.sleep(3)
+        status_of_url1 = True       # URL 상태 기본 값 = True
+        status_of_url2 = True
+        status_of_url3 = True
 
 
-def url_alive_check():
-    global http_url_page_check_list
-    global http_url_page_check_temp
+        while True:
+            msg = title
+            try:        # try ~ except 1개당 1개의 URL
+                current_url_1_status = GET_URL_ALIVE_CHECK(url_1)
+                if current_url_1_status == True:
+                    if status_of_url1 == True:
+                        status_of_url1 = False
+                        msg += url_1 + " is available at 80 port\r\n"
+                        send(msg)
+                elif current_url_1_status == False:
+                    if status_of_url1 == False:
+                        status_of_url1 = True
+                        msg += url_1 + " is not available at 80 port\r\n"
+                        send(msg)
+            except:
+                pass
 
-    idx = 0
-    for url_page in http_url_page_list:
-        try:
-            res = requests.get(url_page, timeout=2)
-            if res.status_code == requests.codes.ok:
-                http_url_page_check_temp[idx] = True
-        except (requests.RequestException, requests.ConnectionError) as e:
-            http_url_page_check_temp[idx] = False
-        idx = idx + 1
+            try:
+                current_url_2_status = GET_URL_ALIVE_CHECK(url_2)
+                if current_url_2_status == True:
+                    if status_of_url2 == True:
+                        status_of_url2 = False
+                        msg += url_2 + " is available at 80 port\r\n"
+                        send(msg)
+                elif current_url_2_status == False:
+                    if status_of_url2 == False:
+                        status_of_url2 = True
+                        msg += url_2 + " is not available at 80 port\r\n"
+                        send(msg)
+            except:
+                pass
 
-    #print("list -> " + str(http_url_page_check_list[0]) + "/" + str(http_url_page_check_list[1]) + "/" + str(http_url_page_check_list[2]) )
-    #print("temp -> " + str(http_url_page_check_temp[0]) + "/" + str(http_url_page_check_temp[1]) + "/" + str(http_url_page_check_temp[2]) )
+            try:
+                current_url_3_status = GET_URL_ALIVE_CHECK(url_3)
+                if current_url_3_status == True:
+                    if status_of_url3 == True:
+                        status_of_url3 = False
+                        msg += url_3 + " is available at 80 port\r\n"
+                        send(msg)
+                elif current_url_3_status == False:
+                    if status_of_url3 == False:
+                        status_of_url3 = True
+                        msg += url_3 + " is not available at 80 port\r\n"
+                        send(msg)
+            except:
+                pass
+
+            time.sleep(3)
 
 if __name__ == '__main__':
     daemon()
