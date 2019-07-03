@@ -41,14 +41,21 @@ url_6 = 'http://10.10.10.12:28080'
 """
 URL Alive 체크 함수
 """
+#def GET_URL_ALIVE_CHECK(url):  # 이 코드 블록은 테스트가 더 필요하다.
+#        try:
+#            res = requests.get(url, timeout=2)
+#            if res.status_code == requests.codes.ok:
+#                return True
+#        except (requests.RequestException, requests.ConnectionError) as e:
+#            return False
+
 def GET_URL_ALIVE_CHECK(url):
         try:
-            res = requests.get(url, timeout=2)
-            if res.status_code == requests.codes.ok:
+            res = urllib.request.urlopen(url, timeout=3)
+            if True:
                 return True
-        except (requests.RequestException, requests.ConnectionError) as e:
+        except (urllib.request.URLError) as e:
             return False
-
 """
 현재 URL 서비스 상태 저장
 """

@@ -24,6 +24,7 @@ def main():
     except socket.error as e:
         print("Error creating socket : %s" % e)
         sys.exit(1)
+        #return False
 
 
 #두번째 try-except block : 주어진 host/port로 연결 시도
@@ -31,12 +32,16 @@ def main():
     try:
         s.connect((host, port))
         print("Success %s" % host)
+        #if True:
+            #return True
     except socket.gaierror as e:
         print("Address-related error connecting to server: %s" % e)
         sys.exit(1)
+        #return False
     except socket.error as e:
         print("Connection error: %s" % e)
         sys.exit(1)
+        #return False
 
 
 #세번째 try-except block : 데이터 보내기 시도
@@ -57,6 +62,7 @@ def main():
 #            sys.exit(1)
 #            if not len(buf):
 #                break
+        #전달받은 데이터를 표준 출력으로 내보낸다.
 #            sys.stdout.write(buf)
 
 if __name__ == '__main__':
