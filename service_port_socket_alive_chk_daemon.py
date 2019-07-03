@@ -14,7 +14,6 @@ Telegram bot의 token value 설정
 """
 sigong_token = 'Your_token'
 sigong = 'Your Chat ID'
-#sigong = '-1001473364013'
 bot = telegram.Bot(token = sigong_token)
 
 """
