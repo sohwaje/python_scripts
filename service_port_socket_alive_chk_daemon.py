@@ -6,14 +6,14 @@ from requests.exceptions import Timeout
 """
 서버 라벨 설정(서버 또는 호스트의 이름)
 """
-serverName = 'I-SCREAM JEUS Port'
+serverName = 'service Port'
 title = '[' + serverName + ']\n'
 
 """
 Telegram bot의 token value 설정
 """
-sigong_token = '851723999:AAFUkV3XFAHbujWNbbJO2AXr6dr3SKg8AWA'
-sigong = '137532606'
+sigong_token = 'Your_token'
+sigong = 'Your Chat ID'
 #sigong = '-1001473364013'
 bot = telegram.Bot(token = sigong_token)
 
