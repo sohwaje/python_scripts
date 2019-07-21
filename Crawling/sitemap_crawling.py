@@ -1,7 +1,8 @@
 import urllib.request
 from urllib.error import URLError, HTTPError, ContentTooShortError
 import re
-
+"""이 코드는 사이트맵을 제공하는 사이트에서만 유효하다.
+"""
 def download(url, retries=2, user_agent='wswp', charset='utf-8'):
     print('다운로드:', url)
     request = urllib.request.Request(url)
@@ -24,7 +25,7 @@ def crawl_sitemap(url):
     # 사이트 맵 파일을 다운로드 한다.
     sitemap = download(url)
     # 사이트 맵 링크를 추출한다.
-    links = re.findall('<loc>(.*?)</loc>', sitemap)
+    links = re.findall('<loc>(.*?)</loc>', sitemap) # 다운로드 한 sitemap에서 <loc> </loc> 태그 부분을 정규 표현식을 사용해 포획한다.
     # 각 링크를 다운로드 한다.
     for link in links:
         html = download(link)
