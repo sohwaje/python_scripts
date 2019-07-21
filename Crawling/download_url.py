@@ -18,7 +18,7 @@ def download(url, retries=2, user_agent='wswp', charset='utf-8'):
     except (URLError, HTTPError, ContentTooShortError) as e: # 다운로드 또는 url 에러에 대한 예외 처리.
         print('다운로드 에러:', e.reason)
         html = "알 수 없는 오류가 발생하였습니다."
-        if retries > 0:
+        if retries > 0: # retires가 0보다 크면
             if hasattr(e, 'code') and 400 <= e.code < 600:
                 # 4xx, 5xx 에러가 발생하면 재귀적 재시도
                 return download(url, retries - 1)
