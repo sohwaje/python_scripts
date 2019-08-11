@@ -25,15 +25,19 @@ def link_crawler(start_url, link_regex):
     """지정된 시작 start_url에서 link_regex와 일치하는 링크를 크롤링한다.
     """
     crawl_queue = [start_url]
+    seen = set(crawl_queue)     # 이전에 본 URL을 추적한다.
     while crawl_queue:
         url = crawl_queue.pop() # crawl_queue 리스트의 맨 마지막 요소를 리턴하고 그 값은 삭제.
         html = download(url)    # download()함수를 호출하여 해당 요소를 다운로드 한다.
-        if html is not None:
+        if not html:
             continue
     # 정규식과 일치하는 링크만 필터링한다.
         for link in get_links(html):
             if re.match(link_regex, link):
-                crawl_queue.append(link)
+                abs_link = urljoin(start_url, link)
+                if abs_link not in seen:
+                    seen.add(abs_link)
+                    crawl_queue.append(abs_link)
 
 def get_links(html):
     """ html에서 링크 목록을 리턴한다."""
