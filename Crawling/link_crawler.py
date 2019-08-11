@@ -27,7 +27,7 @@ def link_crawler(start_url, link_regex):
     crawl_queue = [start_url]
     while crawl_queue:
         url = crawl_queue.pop() # crawl_queue 리스트의 맨 마지막 요소를 리턴하고 그 값은 삭제.
-        html = download(url)
+        html = download(url)    # download()함수를 호출하여 해당 요소를 다운로드 한다.
         if html is not None:
             continue
     # 정규식과 일치하는 링크만 필터링한다.
