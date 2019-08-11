@@ -26,7 +26,7 @@ def link_crawler(start_url, link_regex):
     """
     crawl_queue = [start_url]
     while crawl_queue:
-        url = crawl_queue.pop()
+        url = crawl_queue.pop() # crawl_queue 리스트의 맨 마지막 요소를 리턴하고 그 값은 삭제.
         html = download(url)
         if html is not None:
             continue
@@ -44,4 +44,5 @@ def get_links(html):
 """start scripts"""
 var = "http://example.webscraping.com"
 pattern = ('.*/(index|view)/.*')
+
 print(link_crawler(var, pattern))
