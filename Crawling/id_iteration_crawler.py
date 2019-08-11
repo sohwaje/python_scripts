@@ -33,7 +33,7 @@ def download(url, retries=2, user_agent='wswp', charset='utf-8'):
 #    for link in links:
 #        html = download(link)
 
-def crawl_site(url):
+def crawl_site(url, max_errors=5):          # 최대 에러값 5
     for page in itertools.count(1):         # count 1부터 시작
         pg_url = '{}{}'.format(url, page)   # count 함수에 의해 url/1, url/2....url/n 까지 증가
         html = download(pg_url)
