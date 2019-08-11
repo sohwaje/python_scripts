@@ -24,15 +24,6 @@ def download(url, retries=2, user_agent='wswp', charset='utf-8'):
                 return download(url, retries - 1)
     return html
 
-#def crawl_sitemap(url):
-    # 사이트 맵 파일을 다운로드 한다.
-#    sitemap = download(url)
-    # 사이트 맵 링크를 추출한다.(각 사이트 맵 구성마다 다르다.)
-#    links = re.findall('<loc>(.*?)</loc>', sitemap) # 다운로드 한 sitemap에서 <loc> </loc> 태그 부분을 정규 표현식을 사용해 포획한다.
-    # 각 링크를 다운로드 한다.
-#    for link in links:
-#        html = download(link)
-
 def crawl_site(url, max_errors=5):          # 최대 에러값 5
     for page in itertools.count(1):         # count 1부터 시작
         pg_url = '{}{}'.format(url, page)   # count 함수에 의해 url/1, url/2....url/n 까지 증가
