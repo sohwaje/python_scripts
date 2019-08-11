@@ -42,7 +42,8 @@ def get_links(html):
     return webpage_regex.findall(html)
 
 """start scripts"""
-var = "http://example.webscraping.com"
-pattern = ('.*/(index|view)/.*')
+#var = "http://example.webscraping.com"
+#pattern = ('.*/(index|view)/.*')
 
-print(link_crawler(var, pattern))
+#print(link_crawler(var, pattern))
+link_crawler('http://example.webscraping.com','.*/(index|view)/.*')
