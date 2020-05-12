@@ -46,11 +46,10 @@ def main():
     print(templ % (
         "Proto", "Local address", "Remote address", "Status", "PID",
         "Program name"))
-    proc_names = {}
-    for p in psutil.process_iter(['pid', 'name']):
-        proc_names[p.info['pid']] = p.info['name']
+    proc_names = {}   # 딕셔너리 자료형 초기화
+    for p in psutil.process_iter(['pid', 'name']): # pid와 name을 info의 속성으로 지정
+        proc_names[p.info['pid']] = p.info['name'] # 딕셔너리에 'pid':'name' 쌍으로 추가
         """
-        proc_names 딕셔너리에 'pid':'name' 쌍 추가한다.
         ex)
         proc_names={}
         a = 'a'
