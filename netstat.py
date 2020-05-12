@@ -47,8 +47,18 @@ def main():
         "Proto", "Local address", "Remote address", "Status", "PID",
         "Program name"))
     proc_names = {}
-    for p in psutil.process_iter(['pid', 'name']):  # pid:name 사전 형식으로 proc_names={}에 저장함.
+    for p in psutil.process_iter(['pid', 'name']):
         proc_names[p.info['pid']] = p.info['name']
+        """
+        proc_names 딕셔너리에 'pid':'name' 쌍 추가한다.
+        ex)
+        proc_names={}
+        a = 'a'
+        b = 'b'
+        proc_names['a'] = 'b'
+        print(proc_names)
+        >>> {'a': 'b'}
+        """
     for c in psutil.net_connections(kind='inet'):
         laddr = "%s:%s" % (c.laddr)
         raddr = ""
