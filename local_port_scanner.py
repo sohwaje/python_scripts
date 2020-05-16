@@ -7,7 +7,7 @@ python2.x, python3.x
 """
 def check_port():
     port_open=[]
-    for port in range(1, 65536):
+    for port in range(1, 65535):
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.settimeout(5);
