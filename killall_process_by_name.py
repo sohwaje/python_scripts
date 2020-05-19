@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# https://github.com/giampaolo/psutil/blob/master/scripts/killall.py
+# # usage : python3.7 killall_process_by_name.py java
 import os
 import sys
 import psutil
