@@ -23,11 +23,11 @@ def main():
         pinfo = proc.as_dict(attrs=['pid','name','cmdline'])
         if (pinfo['name'] == NAME and INSTANCE in pinfo['cmdline']):
             if proc.name() == NAME and proc.pid != os.getpid():
-                print("Process name : %s, PID : %s" % (proc.name(), proc.pid), str(INSTANCE))
                 proc.kill()
                 killed.append(proc.pid)
+                print("Process name : %s, PID : %s, INSTANCE : %s" % (proc.name(), proc.pid, INSTANCE))
     if not killed:
-        sys.exit('%s: no process found' % NAME)
+        sys.exit("%s : %s: no process found" % (NAME, INSTANCE))
     else:
         sys.exit(0)
 
