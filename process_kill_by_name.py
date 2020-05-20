@@ -20,8 +20,8 @@ def main():
 
     killed = []  # 리스트를 초기화 한다.
     for proc in psutil.process_iter():
-        pinfo = proc.as_dict(attrs=['pid','name','cmdline'])
-        if (pinfo['name'] == NAME and INSTANCE in pinfo['cmdline']):
+        pinfo = proc.as_dict(attrs=['pid','name','cmdline'])    #as_dict : 여러 프로세스의 attrs 값을 지정하여 사전으로 보여준다.
+        if (pinfo['name'] == NAME and INSTANCE in pinfo['cmdline']):  # cmdline의 값(리스트) 안에 INSTANCE가 있으면 참.
             if proc.name() == NAME and proc.pid != os.getpid():
                 proc.kill()
                 killed.append(proc.pid)
