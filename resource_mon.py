@@ -18,7 +18,6 @@ def tear_down():
     curses.echo()
     curses.endwin()
 
-
 win = curses.initscr()
 atexit.register(tear_down)
 curses.endwin()
@@ -43,7 +42,6 @@ def print_line(line, highlight=False):
 
 # --- /curses stuff
 
-
 def poll(interval):
     # sleep some time
     time.sleep(interval)
@@ -60,7 +58,7 @@ def print_header():
     percs = psutil.cpu_percent(interval=0, percpu=True)
     for cpu_num, perc in enumerate(percs):
         dashes, empty_dashes = get_dashes(perc)
-        line= (" CPU%-2s [%s%s] %5s%%" % (cpu_num, dashes, empty_dashes,
+        line = (" CPU%-2s [%s%s] %5s%%" % (cpu_num, dashes, empty_dashes,
                                               perc))
         print_line(line)
 
@@ -88,17 +86,12 @@ def print_header():
 
 def refresh_window():
     """Print results on screen by using curses."""
+    global lineno
+    lineno = 0
     curses.endwin()
     win.erase()
     print_header()
-
-    for p in range(1, 100):
-        try:
-            print_line("")
-        except curses.error:
-            break
-        win.refresh()
-
+    win.refresh()
 
 def main():
     try:
@@ -109,7 +102,6 @@ def main():
             interval = 1
     except (KeyboardInterrupt, SystemExit):
         pass
-
 
 if __name__ == '__main__':
     main()
