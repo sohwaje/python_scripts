@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Linux: export AZURE_STORAGE_CONNECTION_STRING="<yourconnectionstring>"
 # if not install azure-storage-blob, please run command "sudo pip3 install azure-storage-blob"
-import sys, os, uuid
+import sys, os, uuid, glob
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, __version__
 
 connect_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
