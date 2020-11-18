@@ -36,5 +36,6 @@ try:
         print("new upload_container_name : " + upload_container_name)
         container_client = blob_service_client.create_container(upload_container_name)
         Create_container_and_upload_file()
+        # print("upload_container_name : " + upload_container_name + " dose not exist. Create container first.") 새 컨테이너가 필요 없을 때 출력
 except Exception as ex:
     print(ex)
