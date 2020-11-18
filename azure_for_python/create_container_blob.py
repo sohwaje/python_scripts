@@ -6,9 +6,19 @@ import sys, os, uuid, glob
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, __version__
 
 connect_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
-local_path = "/home/azureuser"
+local_path = "/home/azureuser/"
 local_file_name = "ls" + ".sh"
 upload_container_name = "samplecontainer"
+
+# def get_list_local(local_path, files = [], directories = []):
+#     for file in os.listdir(local_path):
+#         item = local_path + file
+#         if os.path.isdir(item):
+#             directories.append(item + "/")
+#             get_list_local(item + "/", files, directories)
+#         else :
+#             files.append(item)
+#     return files, directories
 
 def Create_container_and_upload_file():
     upload_file_path = os.path.join(local_path, local_file_name)
