@@ -3,7 +3,7 @@
 # Linux: export AZURE_STORAGE_CONNECTION_STRING="<yourconnectionstring>"
 # if not install azure-storage-blob, please run command "sudo pip3 install azure-storage-blob"
 """
-Azure blob 컨테이너를 생성하고 모든 로컬Blob(파일, 디렉토리)을 컨테이너에 업로드한다.
+Azure blob 컨테이너에 Blob(모든 로컬 파일, 디렉토리)을 컨테이너에 업로드한다.
 """
 import sys, os, uuid, glob
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, __version__
@@ -13,9 +13,9 @@ from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, _
 """
 # azure blob 스토리지 연결
 connect_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
-# 로컬 경로
+# 로컬 경로(업로드 대상들이 있음)
 local_path = "/home/azureuser/"
-# 업로드 경로: azure blob container
+# 업로드 경로: azure blob container(이미 생성되어 있어야 함)
 upload_container_name = "hiclass"
 
 """
@@ -23,10 +23,10 @@ upload_container_name = "hiclass"
 """
 def get_list_local(local_path, files = [], directories = []):
     for file in os.listdir(local_path):
-        item = local_path + file
-        if os.path.isdir(item):
-            directories.append(item + "/")
-            get_list_local(item + "/", files, directories)
+        item = local_path + file                                # item은 path+file 명으로 설정
+        if os.path.isdir(item):                                 # item이 디렉토리인지 파일인지 확인.
+            directories.append(item + "/")                      # item이 디렉토리면, directories 리스트에 추가.
+            get_list_local(item + "/", files, directories)      # item이 디렉토리면, 하위디렉토리까지 탐색.
         else :
             files.append(item)
     return files, directories
@@ -54,14 +54,9 @@ try:
         container_list.append(container['name'])                    # 컨테이너 리스트에 해당 컨테이너를 추가
     if upload_container_name not in container_list:
         print("upload_container_name : " + upload_container_name + " dose not exist.")
-        container_client = blob_service_client.create_container(upload_container_name)
-        upload_file()
+        sys.exit()
     else:
         print("upload_container_name : " + upload_container_name + " dose exist.")
-        upload_container_name = "sample" + str(uuid.uuid4())    # 새로운 컨테이너 생성
-        print("new upload_container_name : " + upload_container_name)
-        container_client = blob_service_client.create_container(upload_container_name)
         upload_file()
-        # print("upload_container_name : " + upload_container_name + " dose not exist. Create container first.") 새 컨테이너가 필요 없을 때 출력
 except Exception as ex:
     print(ex)
