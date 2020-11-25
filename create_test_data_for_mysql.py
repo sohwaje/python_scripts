@@ -71,9 +71,9 @@ VALUES
 
 
 if __name__ == '__main__':
-    create_datas()
+    create_datas()                              # 데이터 생성
     current_dir = pathlib.Path().absolute()
     dump_file = f"{current_dir}/{filename}"
     print("덤프파일 경로 : ", dump_file)
     mypass = getpass("패스워드를 입력해주세요 : ")
-    os.system(f"mysql -u root -p{mypass} < {dump_file}")
+    os.system(f"mysql -u root -p{mypass} < {dump_file}")        # 생성한 데이터(sql) 파일을 DB에 import
