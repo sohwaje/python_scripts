@@ -28,7 +28,7 @@ def get_list_local(local_path, files = [], directories = []):
             directories.append(item + "/")                      # item이 디렉토리면, directories 리스트에 추가.
             get_list_local(item + "/", files, directories)      # item이 디렉토리면, 하위디렉토리까지 탐색.
         else :
-            files.append(item)
+            files.append(item)                                  # item이 파일이면 파일 리스트에 추가
     return files, directories
 
 """
