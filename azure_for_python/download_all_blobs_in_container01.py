@@ -23,8 +23,12 @@ def save_blob(file_name,file_content):
     download_file_path = os.path.join(LOCAL_BLOB_PATH, file_name)   # /LOCAL_BLOB_PATH/file_name
     # for nested blobs, create local path as well!
     os.makedirs(os.path.dirname(download_file_path), exist_ok=True) # 하위 디렉토리까지 생성
-    with open(download_file_path, "wb") as file:
-      file.write(file_content)
+    with open(download_file_path, "wb") as file:                    # download_file_path를 쓰기 모드로 열고 file이라는 별칭으로 치환한다.
+      file.write(file_content)          # download_file_path 요소에 file_content를 쓴다
+      """
+      ex) with open("foo.txt", "w") as f:
+              f.write("Life is too short, you need python")
+      """
 
 def download_all_blobs_in_container():
     my_blobs = container_client.list_blobs()            # blob 리스트가 있는 my_blobs 인스턴스 생성
