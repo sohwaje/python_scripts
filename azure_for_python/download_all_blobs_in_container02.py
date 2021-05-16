@@ -1,3 +1,4 @@
+#https://www.quickprogrammingtips.com/azure/how-to-download-blobs-from-azure-storage-using-python.html
 import re, sys, os, uuid, glob
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, __version__
 

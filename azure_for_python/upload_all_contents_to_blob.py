@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+# https://www.quickprogrammingtips.com/azure/how-to-upload-files-to-azure-storage-blobs-using-python.html
 # Linux: export AZURE_STORAGE_CONNECTION_STRING="<yourconnectionstring>"
 # if not install azure-storage-blob, please run command "sudo pip3 install azure-storage-blob"
 """
