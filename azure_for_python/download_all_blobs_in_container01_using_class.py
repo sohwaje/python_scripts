@@ -22,6 +22,7 @@ class AzureBlobFileDownloader:
         self.container_client = self.blob_service_client.get_container_client(
             BLOB_CONTAINER)
         # blob을 저장하기 위한 함수
+
     def save_blob(self, file_name, file_content):
         download_file_path = os.path.join(
             LOCAL_BLOB_PATH, file_name)   # 경로: /LOCAL_BLOB_PATH/file_name
@@ -44,9 +45,10 @@ class AzureBlobFileDownloader:
         for blob in my_blobs:                               # my_blobs 인스턴스에서 blob을 하나씩 꺼냄
             print(blob.name)
             # blob의 콘텐츠를 하나하나 읽어 메모리에 저장한다
-            bytes = self.container_client.get_blob_client(blob).download_blob().readall()
-            self.save_blob(blob.name, bytes) # 블롭의 이름과 블롭의 내용
+            bytes = self.container_client.get_blob_client(
+                blob).download_blob().readall()
+            self.save_blob(blob.name, bytes)  # 블롭의 이름과 블롭의 내용
 
 
-go_download = AzureBlobFileDownloader() # Class를 객체화 한다
+go_download = AzureBlobFileDownloader()  # Class를 객체화 한다
 go_download.download_all_blobs_in_container()
