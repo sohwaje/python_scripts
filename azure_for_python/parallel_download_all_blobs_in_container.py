@@ -1,8 +1,8 @@
 # https://www.quickprogrammingtips.com/azure/how-to-download-blobs-from-azure-storage-using-python.html
 # Python program to bulk download blob files from azure storage
 # Uses latest python SDK() for Azure blob storage
-# Requires python 3.6 or above
-# pip3 install azure-storage-blob --user
+# ** Requires python 3.6 or above **
+# pip3 install azure-storage-blob --user or pip3 install azure-storage-blob --upgrade
 import os
 from multiprocessing.pool import ThreadPool
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, __version__

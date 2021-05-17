@@ -1,4 +1,6 @@
 # https://www.quickprogrammingtips.com/azure/how-to-download-blobs-from-azure-storage-using-python.html
+# ** Requires python 3.6 or above **
+# pip3 install azure-storage-blob --user or pip3 install azure-storage-blob --upgrade
 import re
 import sys
 import os
