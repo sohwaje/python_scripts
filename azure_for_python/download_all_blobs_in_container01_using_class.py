@@ -14,7 +14,7 @@ LOCAL_BLOB_PATH = "D:\TEST_DOWNLOAD"
 BLOB_CONTAINER = "testapibuild"
 
 
-class AzureBlobFileDownloader:
+class AzureBlobFileDownloader():
     def __init__(self):
         # blob 컨테이너에 연결하기 위한 클래스
         self.blob_service_client = BlobServiceClient.from_connection_string(
