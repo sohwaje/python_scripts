@@ -36,7 +36,7 @@ class Daemon(object):
 
         try:
             pid = os.fork()
-            if pid &gt; 0:
+            if pid > 0:
                 # Exit first parent.
                 sys.exit(0)
         except OSError as e:
@@ -52,7 +52,7 @@ class Daemon(object):
         # Do second fork.
         try:
             pid = os.fork()
-            if pid &gt; 0:
+            if pid > 0:
                 # Exit from second parent.
                 sys.exit(0)
         except OSError as e:
@@ -91,7 +91,7 @@ class Daemon(object):
 
         # Handle signals
         signal.signal(signal.SIGINT, self._sigterm_handler)
-        signal.signal(signal.SIGTERM, self._sigterm_handler)
+        signal.signal(signal.SIGTERM, self._sigterm_handler)            # go to null -> si = open(os.devnull, 'r')
         signal.signal(signal.SIGHUP, self._reload_handler)
 
         # Check if the daemon is already running.
@@ -208,12 +208,14 @@ class MyDaemon(Daemon):
     def run(self):
         x = 10
         y = x ** 2
+        # return y
 
 
 ########################################################################################################################
 
 if __name__ == "__main__":
     daemon = MyDaemon()
+    # print(daemon.run())
 
     usageMessage = "Usage: {} (start|stop|restart|status|reload|version)".format(sys.argv[0])
 
