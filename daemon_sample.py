@@ -1,7 +1,12 @@
 #!/opt/python3/bin/python3
 # -*- coding: utf-8 -*-
 
-import sys, os, time, psutil, signal
+import sys
+import os
+import time
+import psutil
+import signal
+import logging
 
 
 class Daemon(object):
@@ -12,9 +17,12 @@ class Daemon(object):
 
     def __init__(self, stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
         self.ver = 0.1  # version
-        self.pauseRunLoop = 0    # 0 means none pause between the calling of run() method.
-        self.restartPause = 1    # 0 means without a pause between stop and start during the restart of the daemon
-        self.waitToHardKill = 3  # when terminate a process, wait until kill the process with SIGTERM signal
+        # 0 means none pause between the calling of run() method.
+        self.pauseRunLoop = 0
+        # 0 means without a pause between stop and start during the restart of the daemon
+        self.restartPause = 1
+        # when terminate a process, wait until kill the process with SIGTERM signal
+        self.waitToHardKill = 3
 
         self.isReloadSignal = False
         self._canDaemonRun = True
@@ -91,14 +99,16 @@ class Daemon(object):
 
         # Handle signals
         signal.signal(signal.SIGINT, self._sigterm_handler)
-        signal.signal(signal.SIGTERM, self._sigterm_handler)            # go to null -> si = open(os.devnull, 'r')
+        # go to null -> si = open(os.devnull, 'r')
+        signal.signal(signal.SIGTERM, self._sigterm_handler)
         signal.signal(signal.SIGHUP, self._reload_handler)
 
         # Check if the daemon is already running.
         procs = self._getProces()
 
         if procs:
-            m = "Find a previous daemon processes with PIDs {}. Is not already the daemon running?".format(",".join([str(p.pid) for p in procs]))
+            m = "Find a previous daemon processes with PIDs {}. Is not already the daemon running?".format(
+                ",".join([str(p.pid) for p in procs]))
             print(m)
             sys.exit(1)
         else:
@@ -121,7 +131,8 @@ class Daemon(object):
         procs = self._getProces()
 
         if procs:
-            m = "The daemon is running with PID {}.".format(",".join([str(p.pid) for p in procs]))
+            m = "The daemon is running with PID {}.".format(
+                ",".join([str(p.pid) for p in procs]))
             print(m)
         else:
             m = "The daemon is not running!"
@@ -137,7 +148,8 @@ class Daemon(object):
         if procs:
             for p in procs:
                 os.kill(p.pid, signal.SIGHUP)
-                m = "Send SIGHUP signal into the daemon process with PID {}.".format(p.pid)
+                m = "Send SIGHUP signal into the daemon process with PID {}.".format(
+                    p.pid)
                 print(m)
         else:
             m = "The daemon is not running!"
@@ -151,17 +163,20 @@ class Daemon(object):
         procs = self._getProces()
 
         def on_terminate(process):
-            m = "The daemon process with PID {} has ended correctly.".format(process.pid)
+            m = "The daemon process with PID {} has ended correctly.".format(
+                process.pid)
             print(m)
 
         if procs:
             for p in procs:
                 p.terminate()
 
-            gone, alive = psutil.wait_procs(procs, timeout=self.waitToHardKill, callback=on_terminate)
+            gone, alive = psutil.wait_procs(
+                procs, timeout=self.waitToHardKill, callback=on_terminate)
 
             for p in alive:
-                m = "The daemon process with PID {} was killed with SIGTERM!".format(p.pid)
+                m = "The daemon process with PID {} was killed with SIGTERM!".format(
+                    p.pid)
                 print(m)
                 p.kill()
         else:
@@ -207,17 +222,23 @@ class Daemon(object):
 class MyDaemon(Daemon):
     def run(self):
         x = 10
-        y = x ** 2
-        # return y
+        y = x ** 10
+        return y
+
+    def main(self):
+        a = run.y()
+        print(a)
 
 
 ########################################################################################################################
 
+
 if __name__ == "__main__":
     daemon = MyDaemon()
-    # print(daemon.run())
+    daemon.main()
 
-    usageMessage = "Usage: {} (start|stop|restart|status|reload|version)".format(sys.argv[0])
+    usageMessage = "Usage: {} (start|stop|restart|status|reload|version)".format(
+        sys.argv[0])
 
     if len(sys.argv) == 2:
         choice = sys.argv[1]
